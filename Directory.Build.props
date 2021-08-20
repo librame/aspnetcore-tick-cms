@@ -1,0 +1,26 @@
+<Project>
+  <Import Project="build\Version.props" />
+    
+  <PropertyGroup>
+    <ApplicationIcon>..\..\Librame.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Librame Pong</Authors>
+    <Company>https://github.com/librame</Company>
+    <Copyright>Copyright © Librame 2012-2021</Copyright>
+    <PackageTags>net6</PackageTags>
+    <PackageIcon>Librame.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/librame/extensions-tick-cms</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/librame</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\LibrameTick.AspNetCore.Cms.pfx</AssemblyOriginatorKeyFile>
+    <NeutralLanguage>en-US</NeutralLanguage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Librame.png" Pack="true" Visible="false" PackagePath="\" />
+  </ItemGroup>
+
+</Project>
