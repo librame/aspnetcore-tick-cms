@@ -1,8 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>Librame.Extensions.Portal</RootNamespace>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DocumentationFile>..\..\bin\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LibrameTick.Extensions.Data.EntityFrameworkCore" Version="6.0.1-preview1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LibrameTick.Extensions.Content.EntityFrameworkCore\LibrameTick.Extensions.Content.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\LibrameTick.Extensions.Portal.Abstractions\LibrameTick.Extensions.Portal.Abstractions.csproj" />
+  </ItemGroup>
 
 </Project>

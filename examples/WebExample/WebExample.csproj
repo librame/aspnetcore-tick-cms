@@ -5,4 +5,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\LibrameTick.Extensions.Portal.EntityFrameworkCore\LibrameTick.Extensions.Portal.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,5 +1,5 @@
 ﻿
-namespace LibrameTick.AspNetCore.Content.Api.GraphQL;
+namespace Librame.AspNetCore.Content.Api.GraphQL;
 public class Class1
 {
 

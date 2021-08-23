@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace LibrameTick.AspNetCore.Content.Api.GraphQL.Tests;
+namespace Librame.AspNetCore.Content.Api.GraphQL.Tests;
 public class UnitTest1
 {
     [Fact]

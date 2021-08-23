@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace LibrameTick.Extensions.Portal.EntityFrameworkCore.Tests;
+namespace Librame.Extensions.Portal.EntityFrameworkCore.Tests;
 public class UnitTest1
 {
     [Fact]
