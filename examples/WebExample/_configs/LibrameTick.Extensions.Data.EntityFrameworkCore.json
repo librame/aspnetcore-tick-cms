@@ -1,0 +1,13 @@
+﻿{
+  "Access": {
+    "EnsureDatabaseDeleted": true,
+    "EnsureDatabaseCreated": true,
+    "AutomaticMigration": true
+  },
+  "Directories": {
+    "BaseDirectory": "D:\\Repositories\\extensions-tick-cms\\examples\\WebExample",
+    "ConfigDirectory": "D:\\Repositories\\extensions-tick-cms\\examples\\WebExample\\_configs",
+    "ReportDirectory": "D:\\Repositories\\extensions-tick-cms\\examples\\WebExample\\_reports",
+    "ResourceDirectory": "D:\\Repositories\\extensions-tick-cms\\examples\\WebExample\\_resources"
+  }
+}

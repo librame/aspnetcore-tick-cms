@@ -31,6 +31,12 @@ namespace Librame.Extensions.Content.Storing
         public virtual int ParentId { get; set; }
 
         /// <summary>
+        /// 类别标识。
+        /// </summary>
+        [Display(Name = nameof(CategoryId), ResourceType = typeof(ContentResource))]
+        public virtual int CategoryId { get; set; }
+
+        /// <summary>
         /// 名称。
         /// </summary>
         [Display(Name = nameof(Name), ResourceType = typeof(ContentResource))]
@@ -54,6 +60,12 @@ namespace Librame.Extensions.Content.Storing
         /// </summary>
         [Display(Name = nameof(More), ResourceType = typeof(ContentResource))]
         public virtual string? More { get; set; }
+
+        /// <summary>
+        /// 模板。
+        /// </summary>
+        [Display(Name = nameof(Template), ResourceType = typeof(ContentResource))]
+        public virtual string? Template { get; set; }
 
 
         #region IObjectIdentifier

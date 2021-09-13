@@ -10,10 +10,11 @@
 
 #endregion
 
+using Librame.Extensions.Content;
 using Librame.Extensions.Core;
-using Librame.Extensions.Data;
+using Librame.Extensions.Portal;
 
-namespace Librame.Extensions.Portal
+namespace Microsoft.Extensions.DependencyInjection
 {
     /// <summary>
     /// <see cref="PortalExtensionBuilder"/> 静态扩展。
@@ -24,21 +25,21 @@ namespace Librame.Extensions.Portal
         /// <summary>
         /// 添加 <see cref="PortalExtensionBuilder"/>。
         /// </summary>
-        /// <param name="dataBuilder">给定的 <see cref="DataExtensionBuilder"/>。</param>
+        /// <param name="contentBuilder">给定的 <see cref="ContentExtensionBuilder"/>。</param>
         /// <param name="setupAction">给定的配置选项动作（可选）。</param>
         /// <param name="tryLoadOptionsFromJson">尝试从本地 JSON 文件中加载选项配置（可选；默认不加载）。</param>
         /// <returns>返回 <see cref="PortalExtensionBuilder"/>。</returns>
-        public static PortalExtensionBuilder AddPortal(this DataExtensionBuilder dataBuilder,
+        public static PortalExtensionBuilder AddPortal(this ContentExtensionBuilder contentBuilder,
             Action<PortalExtensionOptions>? setupAction = null, bool tryLoadOptionsFromJson = false)
         {
-            var options = new PortalExtensionOptions(dataBuilder.Options);
+            var options = new PortalExtensionOptions(contentBuilder.Options);
 
             if (tryLoadOptionsFromJson)
                 options.TryLoadOptionsFromJson(); // 强迫症，默认不初始创建暂不需要的文件夹
 
             setupAction?.Invoke(options);
 
-            return new PortalExtensionBuilder(dataBuilder, options);
+            return new PortalExtensionBuilder(contentBuilder, options);
         }
 
     }

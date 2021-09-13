@@ -45,7 +45,7 @@ namespace Librame.Extensions.Content
 
 
         /// <summary>
-        /// 初始类别字典集合（值元组分别表示父名称、备注；空父名称表示为根类别）。
+        /// 初始类别字典集合。
         /// </summary>
         public Dictionary<string, (string? ParentName, string? Description)> InitialCategories { get; set; }
             = new Dictionary<string, (string? ParentName, string? Description)>
@@ -58,29 +58,27 @@ namespace Librame.Extensions.Content
             };
 
         /// <summary>
-        /// 初始声明字典集合（值元组分别表示类别名称、备注；空类别名称表示不限制类别，即所有类别）。
+        /// 初始声明字典集合。
         /// </summary>
-        public Dictionary<string, (string? CategoryName, string? Description)> InitialClaims { get; set; }
-            = new Dictionary<string, (string? CategoryName, string? Description)>
+        public Dictionary<string, string> InitialClaims { get; set; }
+            = new Dictionary<string, string>
             {
-                { "正文", ( null, "正文声明 (Text)" ) },
-                { "模板", ( null, "模板声明 (Template)" ) },
-                { "总数", ( null, "总数声明 (Total)" ) }
+                { "正文", "正文声明 (Text)"  },
+                { "模板", "模板声明 (Template)" }
             };
 
         /// <summary>
-        /// 初始窗格字典集合（值元组分别表示父名称、备注；空父名称表示为根窗格）。
+        /// 初始窗格字典集合。
         /// </summary>
-        public Dictionary<string, (string? ParentName, string? Description)> InitialPanes { get; set; }
-            = new Dictionary<string, (string? ParentName, string? Description)>
+        public Dictionary<string, (string Category, string Description, string Template)> InitialPanes { get; set; }
+            = new Dictionary<string, (string Category, string Description, string Template)>
             {
-                { "友链", ( null, "友情链接" ) },
-                { "快讯", ( null, "最新消息" ) },
-                { "焦点", ( null, "最热排行" ) }
+                { "快讯", ( "文章", "最新消息", "* {Title}" ) },
+                { "焦点", ( "文章", "最热排行", "{Number}. {Title}" ) }
             };
 
         /// <summary>
-        /// 初始来源字典集合（值元组分别表示父名称、备注；空父名称表示为根来源）。
+        /// 初始来源字典集合。
         /// </summary>
         public Dictionary<string, (string? ParentName, string? Description)> InitialSources { get; set; }
             = new Dictionary<string, (string? ParentName, string? Description)>
@@ -94,7 +92,7 @@ namespace Librame.Extensions.Content
         public List<string> InitialTags { get; set; }
             = new List<string>
             {
-                "标签"
+                "测试标签"
             };
 
     }

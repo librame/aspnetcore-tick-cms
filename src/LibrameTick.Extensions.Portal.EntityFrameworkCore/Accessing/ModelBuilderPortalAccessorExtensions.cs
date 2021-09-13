@@ -27,7 +27,8 @@ namespace Librame.Extensions.Portal.Accessing
         /// </summary>
         /// <param name="modelBuilder">给定的 <see cref="ModelBuilder"/>。</param>
         /// <returns>返回 <see cref="ModelBuilder"/>。</returns>
-        public static ModelBuilder CreatePortalModel(this ModelBuilder modelBuilder)
+        public static ModelBuilder CreatePortalModel<TUser>(this ModelBuilder modelBuilder)
+            where TUser : class, IUser
         {
             modelBuilder.Entity<Editor>(b =>
             {
@@ -42,7 +43,7 @@ namespace Librame.Extensions.Portal.Accessing
                 b.Property(p => p.Portrait).HasMaxLength(250);
             });
 
-            modelBuilder.Entity<IntegrationUser>(b =>
+            modelBuilder.Entity<TUser>(b =>
             {
                 b.ToTableByPluralize();
 

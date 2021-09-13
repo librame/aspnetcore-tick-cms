@@ -1,0 +1,30 @@
+﻿{
+  "MapRelationship": false,
+  "InitialCategories": {
+    "\u6587\u7AE0": {},
+    "\u6587\u96C6": {},
+    "\u56FE\u7247": {},
+    "\u56FE\u518C": {},
+    "\u4E13\u9898": {}
+  },
+  "InitialClaims": {
+    "\u6B63\u6587": "\u6B63\u6587\u58F0\u660E (Text)",
+    "\u6A21\u677F": "\u6A21\u677F\u58F0\u660E (Template)"
+  },
+  "InitialPanes": {
+    "\u5FEB\u8BAF": {},
+    "\u7126\u70B9": {}
+  },
+  "InitialSources": {
+    "\u539F\u521B": {}
+  },
+  "InitialTags": [
+    "\u6D4B\u8BD5\u6807\u7B7E"
+  ],
+  "Directories": {
+    "BaseDirectory": "D:\\Repositories\\extensions-tick-cms\\examples\\WebExample",
+    "ConfigDirectory": "D:\\Repositories\\extensions-tick-cms\\examples\\WebExample\\_configs",
+    "ReportDirectory": "D:\\Repositories\\extensions-tick-cms\\examples\\WebExample\\_reports",
+    "ResourceDirectory": "D:\\Repositories\\extensions-tick-cms\\examples\\WebExample\\_resources"
+  }
+}

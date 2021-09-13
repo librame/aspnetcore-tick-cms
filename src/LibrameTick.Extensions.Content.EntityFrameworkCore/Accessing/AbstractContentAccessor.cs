@@ -16,6 +16,7 @@ using Librame.Extensions.Data.Accessing;
 using Librame.Extensions.Data.ValueConversion;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Librame.Extensions.Content.Accessing
 {
@@ -45,14 +46,29 @@ namespace Librame.Extensions.Content.Accessing
         public DbSet<Category> Categories { get; set; }
 
         /// <summary>
-        /// 来源数据集。
-        /// </summary>
-        public DbSet<Source> Sources { get; set; }
-
-        /// <summary>
         /// 声明数据集。
         /// </summary>
         public DbSet<Claim> Claims { get; set; }
+
+        /// <summary>
+        /// 窗格数据集。
+        /// </summary>
+        public DbSet<Pane> Panes { get; set; }
+
+        /// <summary>
+        /// 窗格单元数据集。
+        /// </summary>
+        public DbSet<PaneClaim> PaneClaims { get; set; }
+
+        /// <summary>
+        /// 窗格单元数据集。
+        /// </summary>
+        public DbSet<PaneUnit> PaneUnits { get; set; }
+
+        /// <summary>
+        /// 来源数据集。
+        /// </summary>
+        public DbSet<Source> Sources { get; set; }
 
         /// <summary>
         /// 标签数据集。
@@ -79,16 +95,6 @@ namespace Librame.Extensions.Content.Accessing
         /// </summary>
         public DbSet<UnitVisitCount> UnitVisitCounts { get; set; }
 
-        /// <summary>
-        /// 窗格数据集。
-        /// </summary>
-        public DbSet<Pane> Panes { get; set; }
-
-        /// <summary>
-        /// 窗格单元数据集。
-        /// </summary>
-        public DbSet<PaneClaim> PaneClaims { get; set; }
-
 #pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
 
 
@@ -100,12 +106,26 @@ namespace Librame.Extensions.Content.Accessing
         {
             base.OnModelCreating(modelBuilder);
 
+            var provider = ((IInfrastructure<IServiceProvider>)this).Instance;
+
             var options = this.GetService<ContentExtensionOptions>();
             modelBuilder.CreateContentModel(options);
 
             AppendModelCreating(modelBuilder);
 
-            var converterFactory = this.GetService<IEncryptionConverterFactory>();
+            //var internalServiceProvider = ((IInfrastructure<IServiceProvider>)this).Instance;
+
+            //var service = internalServiceProvider.GetService(typeof(TService))
+            //    ?? internalServiceProvider.GetService<IDbContextOptions>()
+            //        ?.Extensions.OfType<CoreOptionsExtension>().FirstOrDefault()
+            //        ?.ApplicationServiceProvider
+            //        ?.GetService(typeof(TService));
+
+            var coreOptions = _options.Extensions.OfType<CoreOptionsExtension>().FirstOrDefault();
+            var p = coreOptions?.ApplicationServiceProvider;
+
+            var converterFactory = coreOptions?.InternalServiceProvider?.GetService<IEncryptionConverterFactory>();
+            var f = p!.GetService<IEncryptionConverterFactory>();
             modelBuilder.UseEncryption(converterFactory, AccessorType);
         }
 

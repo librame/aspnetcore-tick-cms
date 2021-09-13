@@ -27,6 +27,7 @@ namespace Librame.Extensions.Content.Accessing
         private const string GetPanesKey = "GetInitialPanes";
         private const string GetSourcesKey = "GetInitialSources";
         private const string GetTagsKey = "GetInitialTags";
+        private const string GetUnitsKey = "GetInitialUnits";
 
 
         /// <summary>
@@ -51,14 +52,14 @@ namespace Librame.Extensions.Content.Accessing
         /// <summary>
         /// 时钟。
         /// </summary>
-        protected IClock Clock { get; init; }
+        public IClock Clock { get; init; }
 
 
         /// <summary>
         /// 获取初始用户标识。
         /// </summary>
         /// <returns>返回标识字符串。</returns>
-        protected abstract string? GetInitialUserId();
+        public abstract string? GetInitialUserId();
 
 
         /// <summary>
@@ -92,10 +93,10 @@ namespace Librame.Extensions.Content.Accessing
         /// <summary>
         /// 获取类别集合。
         /// </summary>
-        /// <returns>返回 <see cref="Category"/> 数组。</returns>
-        public Category[] GetCategories()
+        /// <returns>返回 <see cref="IEnumerable{Category}"/>。</returns>
+        public IEnumerable<Category> GetCategories()
         {
-            return (Category[])SeedBank.GetOrAdd(GetCategoriesKey, key =>
+            return (IEnumerable<Category>)SeedBank.GetOrAdd(GetCategoriesKey, key =>
             {
                 return ContentOptions.InitialCategories.Select(pair =>
                 {
@@ -121,31 +122,25 @@ namespace Librame.Extensions.Content.Accessing
         /// 异步获取类别集合。
         /// </summary>
         /// <param name="cancellationToken">给定的 <see cref="CancellationToken"/>。</param>
-        /// <returns>返回一个包含 <see cref="Category"/> 数组的异步操作。</returns>
-        public Task<Category[]> GetCategoriesAsync(CancellationToken cancellationToken = default)
+        /// <returns>返回一个包含 <see cref="IEnumerable{Category}"/> 的异步操作。</returns>
+        public Task<IEnumerable<Category>> GetCategoriesAsync(CancellationToken cancellationToken = default)
             => cancellationToken.RunTask(GetCategories);
 
 
         /// <summary>
         /// 获取声明集合。
         /// </summary>
-        /// <returns>返回 <see cref="Claim"/> 数组。</returns>
-        public Claim[] GetClaims()
+        /// <returns>返回 <see cref="IEnumerable{Claim}"/>。</returns>
+        public IEnumerable<Claim> GetClaims()
         {
-            return (Claim[])SeedBank.GetOrAdd(GetClaimsKey, key =>
+            return (IEnumerable<Claim>)SeedBank.GetOrAdd(GetClaimsKey, key =>
             {
                 return ContentOptions.InitialClaims.Select(pair =>
                 {
                     var claim = new Claim();
 
                     claim.Name = pair.Key;
-                    claim.Description = pair.Value.Description;
-
-                    // 查找与类别名称匹配的对应增量标识
-                    var currentCategoryName = pair.Value.CategoryName;
-
-                    claim.CategoryId = GetProgressiveIncremId(ContentOptions.InitialCategories,
-                        ele => ele.Value.ParentName == currentCategoryName);
+                    claim.Description = pair.Value;
 
                     claim.PopulateCreation(GetInitialUserId(), Clock.GetUtcNow());
 
@@ -158,31 +153,29 @@ namespace Librame.Extensions.Content.Accessing
         /// 异步获取声明集合。
         /// </summary>
         /// <param name="cancellationToken">给定的 <see cref="CancellationToken"/>。</param>
-        /// <returns>返回一个包含 <see cref="Claim"/> 数组的异步操作。</returns>
-        public Task<Claim[]> GetClaimsAsync(CancellationToken cancellationToken = default)
+        /// <returns>返回一个包含 <see cref="IEnumerable{Claim}"/> 的异步操作。</returns>
+        public Task<IEnumerable<Claim>> GetClaimsAsync(CancellationToken cancellationToken = default)
             => cancellationToken.RunTask(GetClaims);
 
 
         /// <summary>
         /// 获取窗格集合。
         /// </summary>
-        /// <returns>返回 <see cref="Pane"/> 数组。</returns>
-        public Pane[] GetPanes()
+        /// <returns>返回 <see cref="IEnumerable{Pane}"/>。</returns>
+        public IEnumerable<Pane> GetPanes()
         {
-            return (Pane[])SeedBank.GetOrAdd(GetPanesKey, key =>
+            return (IEnumerable<Pane>)SeedBank.GetOrAdd(GetPanesKey, key =>
             {
+                var categories = GetCategories();
+
                 return ContentOptions.InitialPanes.Select(pair =>
                 {
                     var pane = new Pane();
 
+                    pane.CategoryId = categories.First(p => p.Name == pair.Value.Category).Id;
                     pane.Name = pair.Key;
                     pane.Description = pair.Value.Description;
-
-                    // 查找与父级名称匹配的对应增量标识
-                    var currentParentName = pair.Value.ParentName;
-
-                    pane.ParentId = GetProgressiveIncremId(ContentOptions.InitialPanes,
-                        ele => ele.Value.ParentName == currentParentName);
+                    pane.Template = pair.Value.Template;
 
                     pane.PopulateCreation(GetInitialUserId(), Clock.GetUtcNow());
 
@@ -195,18 +188,18 @@ namespace Librame.Extensions.Content.Accessing
         /// 异步获取窗格集合。
         /// </summary>
         /// <param name="cancellationToken">给定的 <see cref="CancellationToken"/>。</param>
-        /// <returns>返回一个包含 <see cref="Pane"/> 数组的异步操作。</returns>
-        public Task<Pane[]> GetPanesAsync(CancellationToken cancellationToken = default)
+        /// <returns>返回一个包含 <see cref="IEnumerable{Pane}"/> 的异步操作。</returns>
+        public Task<IEnumerable<Pane>> GetPanesAsync(CancellationToken cancellationToken = default)
             => cancellationToken.RunTask(GetPanes);
 
 
         /// <summary>
         /// 获取来源集合。
         /// </summary>
-        /// <returns>返回 <see cref="Source"/> 数组。</returns>
-        public Source[] GetSources()
+        /// <returns>返回 <see cref="IEnumerable{Source}"/>。</returns>
+        public IEnumerable<Source> GetSources()
         {
-            return (Source[])SeedBank.GetOrAdd(GetSourcesKey, key =>
+            return (IEnumerable<Source>)SeedBank.GetOrAdd(GetSourcesKey, key =>
             {
                 return ContentOptions.InitialSources.Select(pair =>
                 {
@@ -232,18 +225,18 @@ namespace Librame.Extensions.Content.Accessing
         /// 异步获取来源集合。
         /// </summary>
         /// <param name="cancellationToken">给定的 <see cref="CancellationToken"/>。</param>
-        /// <returns>返回一个包含 <see cref="Source"/> 数组的异步操作。</returns>
-        public Task<Source[]> GetSourcesAsync(CancellationToken cancellationToken = default)
+        /// <returns>返回一个包含 <see cref="IEnumerable{Source}"/> 的异步操作。</returns>
+        public Task<IEnumerable<Source>> GetSourcesAsync(CancellationToken cancellationToken = default)
             => cancellationToken.RunTask(GetSources);
 
 
         /// <summary>
         /// 获取标签集合。
         /// </summary>
-        /// <returns>返回 <see cref="Tag"/> 数组。</returns>
-        public Tag[] GetTags()
+        /// <returns>返回 <see cref="IEnumerable{Tag}"/>。</returns>
+        public IEnumerable<Tag> GetTags()
         {
-            return (Tag[])SeedBank.GetOrAdd(GetTagsKey, key =>
+            return (IEnumerable<Tag>)SeedBank.GetOrAdd(GetTagsKey, key =>
             {
                 return ContentOptions.InitialTags.Select(name =>
                 {
@@ -262,9 +255,58 @@ namespace Librame.Extensions.Content.Accessing
         /// 异步获取标签集合。
         /// </summary>
         /// <param name="cancellationToken">给定的 <see cref="CancellationToken"/>。</param>
-        /// <returns>返回一个包含 <see cref="Tag"/> 数组的异步操作。</returns>
-        public Task<Tag[]> GetTagsAsync(CancellationToken cancellationToken = default)
+        /// <returns>返回一个包含 <see cref="IEnumerable{Tag}"/> 的异步操作。</returns>
+        public Task<IEnumerable<Tag>> GetTagsAsync(CancellationToken cancellationToken = default)
             => cancellationToken.RunTask(GetTags);
+
+
+        /// <summary>
+        /// 获取单元集合。
+        /// </summary>
+        /// <returns>返回 <see cref="List{Unit}"/>。</returns>
+        public List<Unit> GetUnits()
+        {
+            return (List<Unit>)SeedBank.GetOrAdd(GetUnitsKey, key =>
+            {
+                var categories = GetCategories();
+                var sources = GetSources();
+
+                var units = new List<Unit>();
+
+                foreach (var pane in GetPanes())
+                {
+                    for (var i = 1; i < 21; i++)
+                    {
+                        var unit = new Unit();
+
+                        unit.Id = IdGeneratorFactory.GetNewId<long>();
+                        unit.CategoryId = categories.First(p => p.Name == pane.Name).Id;
+                        unit.SourceId = sources.First().Id;
+                        unit.Title = $"测试{pane.Name}单元标题{i}";
+                        unit.Cover = "images/default.jpg";
+
+                        for (var j = 0; j < 10; j++)
+                        {
+                            unit.Body += $"测试{pane.Name}单元内容{i}。";
+                        }
+
+                        unit.PopulateCreation(GetInitialUserId(), Clock.GetUtcNow());
+
+                        units.Add(unit);
+                    }
+                }
+
+                return units;
+            });
+        }
+
+        /// <summary>
+        /// 异步获取单元集合。
+        /// </summary>
+        /// <param name="cancellationToken">给定的 <see cref="CancellationToken"/>。</param>
+        /// <returns>返回一个包含 <see cref="List{Unit}"/> 的异步操作。</returns>
+        public Task<List<Unit>> GetUnitsAsync(CancellationToken cancellationToken = default)
+            => cancellationToken.RunTask(GetUnits);
 
     }
 }

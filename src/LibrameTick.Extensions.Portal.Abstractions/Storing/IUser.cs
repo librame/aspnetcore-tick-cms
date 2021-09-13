@@ -10,12 +10,14 @@
 
 #endregion
 
+using Librame.Extensions.Data;
+
 namespace Librame.Extensions.Portal.Storing
 {
     /// <summary>
     /// 定义用户接口（兼容 Microsoft.AspNetCore.Identity.IdentityUser）。
     /// </summary>
-    public interface IUser
+    public interface IUser : IIdentifier<string>
     {
         /// <summary>
         /// 用户名称。

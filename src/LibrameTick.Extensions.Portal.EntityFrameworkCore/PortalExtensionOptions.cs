@@ -10,8 +10,8 @@
 
 #endregion
 
+using Librame.Extensions.Content;
 using Librame.Extensions.Core;
-using Librame.Extensions.Data;
 using Librame.Extensions.Data.Cryptography;
 using System.Text.Json.Serialization;
 
@@ -25,21 +25,21 @@ namespace Librame.Extensions.Portal
         /// <summary>
         /// 构造一个 <see cref="PortalExtensionOptions"/>。
         /// </summary>
-        /// <param name="dataOptions">给定的 <see cref="DataExtensionOptions"/>。</param>
-        public PortalExtensionOptions(DataExtensionOptions dataOptions)
-            : base(dataOptions, dataOptions.Directories)
+        /// <param name="contentOptions">给定的 <see cref="ContentExtensionOptions"/>。</param>
+        public PortalExtensionOptions(ContentExtensionOptions contentOptions)
+            : base(contentOptions, contentOptions.Directories)
         {
-            DataOptions = dataOptions;
+            ContentOptions = contentOptions;
 
-            ServiceCharacteristics.AddSingleton<IPasswordHasher>();
+            ServiceCharacteristics.AddSingleton(typeof(IPasswordHasher<>));
         }
 
 
         /// <summary>
-        /// 数据扩展选项。
+        /// 内容扩展选项。
         /// </summary>
         [JsonIgnore]
-        public DataExtensionOptions DataOptions { get; init; }
+        public ContentExtensionOptions ContentOptions { get; init; }
 
         /// <summary>
         /// 映射关系（默认不映射）。
@@ -47,21 +47,21 @@ namespace Librame.Extensions.Portal
         public bool MapRelationship { get; set; }
 
         /// <summary>
-        /// 初始编者字典集合（键表示名称，值表示描述）。
+        /// 初始编者字典集合（键表示名称，值元组分别表示用户名称、编者备注）。
         /// </summary>
-        public Dictionary<string, string> InitialEditors { get; set; }
-            = new Dictionary<string, string>
+        public Dictionary<string, (string UserName, string? Description)> InitialEditors { get; set; }
+            = new Dictionary<string, (string UserName, string? Description)>
             {
-                { "小编", "默认小编" }
+                { "主编", ( "admin", "初始主编" ) }
             };
 
         /// <summary>
-        /// 初始集成用户列表集合（键表示用户名称，值表示密码；密码可为空，如果为空则使用初始密码）。
+        /// 初始用户列表集合（键表示用户名称，值表示密码；密码可为空，如果为空则使用初始密码）。
         /// </summary>
-        public Dictionary<string, string?> InitialIntegrationUsers { get; set; }
+        public Dictionary<string, string?> InitialUsers { get; set; }
             = new Dictionary<string, string?>
             {
-                { "admin", null }
+                { "admin", "admin666" }
             };
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Librame.Extensions.Portal
         /// </summary>
         [Encrypted]
         public string InitialPassword { get; set; }
-            = "admin666";
+            = "123456";
 
     }
 }

@@ -30,15 +30,9 @@ namespace Librame.Extensions.Content.Storing
         public virtual int CategoryId { get; set; }
 
         /// <summary>
-        /// 窗格标识。
-        /// </summary>
-        [Display(Name = nameof(PaneId), ResourceType = typeof(ContentResource))]
-        public virtual int PaneId { get; set; }
-
-        /// <summary>
         /// 来源标识。
         /// </summary>
-        [Display(Name = nameof(CategoryId), ResourceType = typeof(ContentResource))]
+        [Display(Name = nameof(SourceId), ResourceType = typeof(ContentResource))]
         public virtual int SourceId { get; set; }
 
         /// <summary>
@@ -59,6 +53,19 @@ namespace Librame.Extensions.Content.Storing
         /// </summary>
         [Display(Name = nameof(Reference), ResourceType = typeof(ContentResource))]
         public virtual string? Reference { get; set; }
+
+        /// <summary>
+        /// 封面。
+        /// </summary>
+        [Display(Name = nameof(Cover), ResourceType = typeof(ContentResource))]
+        public virtual string? Cover { get; set; }
+
+        /// <summary>
+        /// 主体。
+        /// </summary>
+        [Display(Name = nameof(Body), ResourceType = typeof(ContentResource))]
+        public virtual string Body { get; set; }
+            = string.Empty;
 
 
         #region Override

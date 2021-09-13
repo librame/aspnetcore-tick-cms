@@ -10,8 +10,8 @@
 
 #endregion
 
+using Librame.Extensions.Content;
 using Librame.Extensions.Core;
-using Librame.Extensions.Data;
 
 namespace Librame.Extensions.Portal
 {
@@ -24,14 +24,14 @@ namespace Librame.Extensions.Portal
         /// 构造一个 <see cref="PortalExtensionBuilder"/>。
         /// </summary>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="dataBuilder"/> 或 <paramref name="options"/> 为空。
+        /// <paramref name="contentBuilder"/> 或 <paramref name="options"/> 为空。
         /// </exception>
-        /// <param name="dataBuilder">给定的 <see cref="DataExtensionBuilder"/>。</param>
+        /// <param name="contentBuilder">给定的 <see cref="ContentExtensionBuilder"/>。</param>
         /// <param name="options">给定的 <see cref="PortalExtensionOptions"/>。</param>
-        public PortalExtensionBuilder(DataExtensionBuilder dataBuilder, PortalExtensionOptions options)
-            : base(dataBuilder, options)
+        public PortalExtensionBuilder(ContentExtensionBuilder contentBuilder, PortalExtensionOptions options)
+            : base(contentBuilder, options)
         {
-            TryAddOrReplaceServiceByCharacteristic<IPasswordHasher, InternalPasswordHasher>();
+            TryAddOrReplaceService(typeof(IPasswordHasher<>), typeof(InternalPasswordHasher<>));
         }
 
     }

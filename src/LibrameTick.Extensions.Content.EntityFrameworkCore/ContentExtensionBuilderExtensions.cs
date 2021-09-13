@@ -10,10 +10,11 @@
 
 #endregion
 
+using Librame.Extensions.Content;
 using Librame.Extensions.Core;
 using Librame.Extensions.Data;
 
-namespace Librame.Extensions.Content
+namespace Microsoft.Extensions.DependencyInjection
 {
     /// <summary>
     /// <see cref="ContentExtensionBuilder"/> 静态扩展。

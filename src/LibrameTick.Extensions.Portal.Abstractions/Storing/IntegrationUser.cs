@@ -23,21 +23,18 @@ namespace Librame.Extensions.Portal.Storing
     [Description("集成用户")]
     public class IntegrationUser : AbstractCreationIdentifier<string, string>, IUser, IEquatable<IntegrationUser>
     {
-
-#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
-
         /// <summary>
         /// 用户名称。
         /// </summary>
         [Display(Name = nameof(UserName), ResourceType = typeof(PortalResource))]
         public virtual string UserName { get; set; }
+            = string.Empty;
 
         /// <summary>
         /// 密码哈希。
         /// </summary>
         public virtual string PasswordHash { get; set; }
-
-#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
+            = string.Empty;
 
 
         #region Override

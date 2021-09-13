@@ -12,12 +12,12 @@
 
 namespace Librame.Extensions.Portal
 {
-    class InternalPasswordHasher : IPasswordHasher
+    class InternalPasswordHasher<TUser> : IPasswordHasher<TUser>
     {
-        public string HashPassword(string password)
+        public string HashPassword(TUser user, string password)
             => password.FromEncodingString().AsSha256().AsAes().AsBase64String();
 
-        public bool VerifyHashedPassword(string hashedPassword, string providedPassword)
+        public bool VerifyHashedPassword(TUser user, string hashedPassword, string providedPassword)
         {
             var hashedBuffer = hashedPassword.FromBase64String().FromAes();
             var providedBuffer = providedPassword.FromEncodingString().AsSha256();

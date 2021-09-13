@@ -27,14 +27,29 @@ namespace Librame.Extensions.Content.Accessing
         DbSet<Category> Categories { get; set; }
 
         /// <summary>
-        /// 来源数据集。
-        /// </summary>
-        DbSet<Source> Sources { get; set; }
-
-        /// <summary>
         /// 声明数据集。
         /// </summary>
         DbSet<Claim> Claims { get; set; }
+
+        /// <summary>
+        /// 窗格数据集。
+        /// </summary>
+        DbSet<Pane> Panes { get; set; }
+
+        /// <summary>
+        /// 窗格声明数据集。
+        /// </summary>
+        DbSet<PaneClaim> PaneClaims { get; set; }
+
+        /// <summary>
+        /// 窗格单元数据集。
+        /// </summary>
+        DbSet<PaneUnit> PaneUnits { get; set; }
+
+        /// <summary>
+        /// 来源数据集。
+        /// </summary>
+        DbSet<Source> Sources { get; set; }
 
         /// <summary>
         /// 标签数据集。
@@ -60,15 +75,5 @@ namespace Librame.Extensions.Content.Accessing
         /// 单元统计数据集。
         /// </summary>
         DbSet<UnitVisitCount> UnitVisitCounts { get; set; }
-
-        /// <summary>
-        /// 窗格数据集。
-        /// </summary>
-        DbSet<Pane> Panes { get; set; }
-
-        /// <summary>
-        /// 窗格单元数据集。
-        /// </summary>
-        DbSet<PaneClaim> PaneClaims { get; set; }
     }
 }

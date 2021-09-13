@@ -21,36 +21,33 @@ namespace Librame.Extensions.Portal.Storing
     /// 编者。
     /// </summary>
     [Description("编者")]
-    public class Editor : AbstractCreationIdentifier<int, string>, IEquatable<Editor>
+    public class Editor : AbstractCreationIdentifier<string, string>, IEquatable<Editor>
     {
-
-#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
-
         /// <summary>
         /// 用户标识。
         /// </summary>
         [Display(Name = nameof(UserId), ResourceType = typeof(PortalResource))]
         public virtual string UserId { get; set; }
+            = string.Empty;
 
         /// <summary>
         /// 名称。
         /// </summary>
         [Display(Name = nameof(Name), ResourceType = typeof(PortalResource))]
         public virtual string Name { get; set; }
+            = string.Empty;
 
         /// <summary>
         /// 描述。
         /// </summary>
         [Display(Name = nameof(Description), ResourceType = typeof(PortalResource))]
-        public virtual string Description { get; set; }
+        public virtual string? Description { get; set; }
 
         /// <summary>
         /// 肖像。
         /// </summary>
         [Display(Name = nameof(Name), ResourceType = typeof(PortalResource))]
-        public virtual string Portrait { get; set; }
-
-#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
+        public virtual string? Portrait { get; set; }
 
 
         #region Override

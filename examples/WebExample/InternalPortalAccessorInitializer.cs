@@ -1,23 +1,12 @@
-﻿#region License
-
-/* **************************************************************************************
- * Copyright (c) Librame Pang All rights reserved.
- * 
- * http://librame.net
- * 
- * You must not remove this notice, or any other, from this software.
- * **************************************************************************************/
-
-#endregion
-
-using Librame.Extensions.Data;
+﻿using Librame.Extensions.Data;
 using Librame.Extensions.Data.Accessing;
 using Librame.Extensions.Portal.Accessing;
+using Librame.Extensions.Portal.Storing;
 
 namespace WebExample
 {
     class InternalPortalAccessorInitializer<TAccessor> : AbstractAccessorInitializer<TAccessor>
-        where TAccessor : AbstractAccessor, IPortalAccessor
+        where TAccessor : AbstractAccessor, IPortalAccessor<IntegrationUser>
     {
         private InternalPortalAccessorSeeder _seeder;
 

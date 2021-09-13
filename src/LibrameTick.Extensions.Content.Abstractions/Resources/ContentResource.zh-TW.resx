@@ -165,4 +165,13 @@
   <data name="PaneId" xml:space="preserve">
     <value>窗格標識</value>
   </data>
+  <data name="Body" xml:space="preserve">
+    <value>主體</value>
+  </data>
+  <data name="Cover" xml:space="preserve">
+    <value>封圖</value>
+  </data>
+  <data name="Template" xml:space="preserve">
+    <value>樣板</value>
+  </data>
 </root>

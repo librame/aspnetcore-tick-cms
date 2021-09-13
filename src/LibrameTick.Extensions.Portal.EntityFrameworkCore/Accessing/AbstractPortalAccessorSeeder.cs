@@ -10,8 +10,8 @@
 
 #endregion
 
-using Librame.Extensions.Content;
 using Librame.Extensions.Content.Accessing;
+using Librame.Extensions.Core;
 using Librame.Extensions.Data;
 using Librame.Extensions.Data.Accessing;
 using Librame.Extensions.Portal.Storing;
@@ -21,23 +21,26 @@ namespace Librame.Extensions.Portal.Accessing
     /// <summary>
     /// 定义抽象实现门户 <see cref="IAccessorSeeder"/>。
     /// </summary>
-    public abstract class AbstractPortalAccessorSeeder : AbstractContentAccessorSeeder
+    /// <typeparam name="TUser">指定实现 <see cref="IUser"/> 的用户类型。</typeparam>
+    public abstract class AbstractPortalAccessorSeeder<TUser> : AbstractContentAccessorSeeder
+        where TUser : IUser
     {
-        private const string GetIntegrationUsersKey = "GetInitialIntegrationUsers";
+        private const string GetUsersKey = "GetInitialUsers";
+        private const string GetEditorsKey = "GetInitialEditors";
 
-        private readonly IPasswordHasher _passwordHasher;
+        private readonly IPasswordHasher<TUser> _passwordHasher;
+        private string? _initialUserId;
 
 
         /// <summary>
-        /// 构造一个 <see cref="AbstractPortalAccessorSeeder"/>。
+        /// 构造一个 <see cref="AbstractPortalAccessorSeeder{TUser}"/>。
         /// </summary>
         /// <param name="idGeneratorFactory">给定的 <see cref="IIdentificationGeneratorFactory"/>。</param>
-        /// <param name="options">给定的 <see cref="ContentExtensionOptions"/>。</param>
         /// <param name="portalOptions">给定的 <see cref="PortalExtensionOptions"/>。</param>
-        /// <param name="passwordHasher">给定的 <see cref="IPasswordHasher"/>。</param>
+        /// <param name="passwordHasher">给定的 <see cref="IPasswordHasher{TUser}"/>。</param>
         protected AbstractPortalAccessorSeeder(IIdentificationGeneratorFactory idGeneratorFactory,
-            ContentExtensionOptions options, PortalExtensionOptions portalOptions, IPasswordHasher passwordHasher)
-            : base(idGeneratorFactory, options)
+            PortalExtensionOptions portalOptions, IPasswordHasher<TUser> passwordHasher)
+            : base(idGeneratorFactory, portalOptions.ContentOptions)
         {
             PortalOptions = portalOptions;
 
@@ -50,71 +53,92 @@ namespace Librame.Extensions.Portal.Accessing
         /// </summary>
         protected PortalExtensionOptions PortalOptions { get; init; }
 
+        /// <summary>
+        /// 后置填充用户动作。
+        /// </summary>
+        public Action<TUser, string, IClock>? PostPopulateUserAction { get; init; }
+
 
         /// <summary>
-        /// 获取集成用户集合。
+        /// 获取初始用户标识。
         /// </summary>
-        /// <returns>返回 <see cref="IntegrationUser"/> 数组。</returns>
-        public IntegrationUser[] GetIntegrationUsers()
+        /// <returns>返回标识字符串。</returns>
+        public override string? GetInitialUserId()
         {
-            return (IntegrationUser[])SeedBank.GetOrAdd(GetIntegrationUsersKey, key =>
-            {
-                return PortalOptions.InitialIntegrationUsers.Select(pair =>
-                {
-                    var integrationUser = new IntegrationUser();
+            if (string.IsNullOrEmpty(_initialUserId))
+                _initialUserId = IdGeneratorFactory.GetNewId<string>();
 
-                    integrationUser.UserName = pair.Key;
+            return _initialUserId;
+        }
+
+
+        /// <summary>
+        /// 获取用户集合。
+        /// </summary>
+        /// <returns>返回 <see cref="IEnumerable{TUser}"/> 数组。</returns>
+        public IEnumerable<TUser> GetUsers()
+        {
+            return (IEnumerable<TUser>)SeedBank.GetOrAdd(GetUsersKey, key =>
+            {
+                return PortalOptions.InitialUsers.Select((pair, i) =>
+                {
+                    var user = ExpressionExtensions.New<TUser>();
+
+                    user.Id = i == 0 ? GetInitialUserId()! : IdGeneratorFactory.GetNewId<string>();
+                    user.UserName = pair.Key;
 
                     var password = string.IsNullOrEmpty(pair.Value) ? PortalOptions.InitialPassword : pair.Value;
-                    integrationUser.PasswordHash = _passwordHasher.HashPassword(password);
+                    user.PasswordHash = _passwordHasher.HashPassword(user, password);
 
-                    integrationUser.PopulateCreation(GetInitialUserId(), Clock.GetUtcNow());
+                    PostPopulateUserAction?.Invoke(user, GetInitialUserId()!, Clock);
 
-                    return integrationUser;
+                    return user;
                 });
             });
         }
 
         /// <summary>
-        /// 异步获取集成用户集合。
+        /// 异步获取用户集合。
         /// </summary>
         /// <param name="cancellationToken">给定的 <see cref="CancellationToken"/>。</param>
-        /// <returns>返回一个包含 <see cref="IntegrationUser"/> 数组的异步操作。</returns>
-        public Task<IntegrationUser[]> GetIntegrationUsersAsync(CancellationToken cancellationToken = default)
-            => cancellationToken.RunTask(GetIntegrationUsers);
+        /// <returns>返回一个包含 <see cref="IEnumerable{IntegrationUser}"/> 数组的异步操作。</returns>
+        public Task<IEnumerable<TUser>> GetUsersAsync(CancellationToken cancellationToken = default)
+            => cancellationToken.RunTask(GetUsers);
 
 
         /// <summary>
-        /// 获取集成用户集合。
+        /// 获取编者集合。
         /// </summary>
-        /// <returns>返回 <see cref="IntegrationUser"/> 数组。</returns>
-        public IntegrationUser[] GetIntegrationUsers()
+        /// <returns>返回 <see cref="IEnumerable{Editor}"/> 数组。</returns>
+        public IEnumerable<Editor> GetEditors()
         {
-            return (IntegrationUser[])SeedBank.GetOrAdd(GetIntegrationUsersKey, key =>
+            return (IEnumerable<Editor>)SeedBank.GetOrAdd(GetEditorsKey, key =>
             {
-                return PortalOptions.InitialIntegrationUsers.Select(pair =>
+                var users = GetUsers();
+
+                return PortalOptions.InitialEditors.Select((pair, i) =>
                 {
-                    var integrationUser = new IntegrationUser();
+                    var editor = new Editor();
 
-                    integrationUser.UserName = pair.Key;
+                    editor.Id = IdGeneratorFactory.GetNewId<string>();
+                    editor.Name = pair.Key;
+                    editor.Description = pair.Value.Description;
+                    editor.UserId = users.First(p => p.UserName == pair.Value.UserName).Id;
 
-                    var password = string.IsNullOrEmpty(pair.Value) ? PortalOptions.InitialPassword : pair.Value;
-                    integrationUser.PasswordHash = _passwordHasher.HashPassword(password);
+                    editor.PopulateCreation(GetInitialUserId(), Clock.GetUtcNow());
 
-                    integrationUser.PopulateCreation(GetInitialUserId(), Clock.GetUtcNow());
-
-                    return integrationUser;
+                    return editor;
                 });
             });
         }
 
         /// <summary>
-        /// 异步获取集成用户集合。
+        /// 异步获取编者集合。
         /// </summary>
         /// <param name="cancellationToken">给定的 <see cref="CancellationToken"/>。</param>
-        /// <returns>返回一个包含 <see cref="IntegrationUser"/> 数组的异步操作。</returns>
-        public Task<IntegrationUser[]> GetIntegrationUsersAsync(CancellationToken cancellationToken = default)
-            => cancellationToken.RunTask(GetIntegrationUsers);
+        /// <returns>返回一个包含 <see cref="IEnumerable{Editor}"/> 数组的异步操作。</returns>
+        public Task<IEnumerable<Editor>> GetEditorsAsync(CancellationToken cancellationToken = default)
+            => cancellationToken.RunTask(GetEditors);
 
     }
 }

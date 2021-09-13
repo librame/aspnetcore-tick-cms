@@ -1,0 +1,16 @@
+﻿{
+  "MapRelationship": false,
+  "InitialEditors": {
+    "\u4E3B\u7F16": {}
+  },
+  "InitialUsers": {
+    "admin": "admin666"
+  },
+  "InitialPassword": "123456",
+  "Directories": {
+    "BaseDirectory": "D:\\Repositories\\extensions-tick-cms\\examples\\WebExample",
+    "ConfigDirectory": "D:\\Repositories\\extensions-tick-cms\\examples\\WebExample\\_configs",
+    "ReportDirectory": "D:\\Repositories\\extensions-tick-cms\\examples\\WebExample\\_reports",
+    "ResourceDirectory": "D:\\Repositories\\extensions-tick-cms\\examples\\WebExample\\_resources"
+  }
+}

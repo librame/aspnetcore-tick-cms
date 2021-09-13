@@ -18,17 +18,19 @@ using Microsoft.EntityFrameworkCore;
 namespace Librame.Extensions.Portal.Accessing
 {
     /// <summary>
-    /// 定义抽象实现 <see cref="IPortalAccessor"/> 的门户访问器。
+    /// 定义抽象实现 <see cref="IPortalAccessor{TUser}"/> 的门户访问器。
     /// </summary>
     /// <typeparam name="TAccessor">指定的门户访问器类型。</typeparam>
-    public abstract class AbstractPortalAccessor<TAccessor> : AbstractContentAccessor<TAccessor>, IPortalAccessor
-        where TAccessor : AbstractAccessor, IPortalAccessor
+    /// <typeparam name="TUser">指定实现 <see cref="IUser"/> 的用户类型。</typeparam>
+    public abstract class AbstractPortalAccessor<TAccessor, TUser> : AbstractContentAccessor<TAccessor>, IPortalAccessor<TUser>
+        where TAccessor : AbstractAccessor, IPortalAccessor<TUser>
+        where TUser : class, IUser
     {
 
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
 
         /// <summary>
-        /// 构造一个 <see cref="AbstractPortalAccessor{TAccessor}"/>。
+        /// 构造一个 <see cref="AbstractPortalAccessor{TAccessor, TUser}"/>。
         /// </summary>
         /// <param name="options">给定的 <see cref="DbContextOptions{TAccessor}"/>。</param>
         protected AbstractPortalAccessor(DbContextOptions<TAccessor> options)
@@ -45,7 +47,7 @@ namespace Librame.Extensions.Portal.Accessing
         /// <summary>
         /// 用户数据集。
         /// </summary>
-        public DbSet<IntegrationUser> Users { get; set; }
+        public DbSet<TUser> Users { get; set; }
 
 #pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
 
@@ -57,7 +59,7 @@ namespace Librame.Extensions.Portal.Accessing
         protected override void AppendModelCreating(ModelBuilder modelBuilder)
         {
             //var options = this.GetService<PortalExtensionOptions>();
-            modelBuilder.CreatePortalModel();
+            modelBuilder.CreatePortalModel<TUser>();
         }
 
     }

@@ -89,6 +89,62 @@ namespace Librame.Extensions.Content.Accessing
                 }
             });
 
+            modelBuilder.Entity<Pane>(b =>
+            {
+                b.ToTableByPluralize();
+
+                b.HasKey(k => k.Id);
+
+                b.HasIndex(i => new { i.ParentId, i.Name }).IsUnique();
+
+                b.Property(p => p.Id).ValueGeneratedOnAdd();
+                b.Property(p => p.ParentId);
+                b.Property(p => p.Name).HasMaxLength(50);
+                b.Property(p => p.Description).HasMaxLength(256);
+                b.Property(p => p.Icon).HasMaxLength(256);
+                b.Property(p => p.More).HasMaxLength(256);
+
+                if (options.MapRelationship)
+                {
+                    b.HasMany<PaneClaim>().WithOne().HasForeignKey(fk => fk.PaneId).IsRequired();
+                    b.HasMany<PaneUnit>().WithOne().HasForeignKey(fk => fk.PaneId).IsRequired();
+                }
+            });
+
+            modelBuilder.Entity<PaneClaim>(b =>
+            {
+                b.ToTableByPluralize();
+
+                b.HasKey(k => k.Id);
+
+                b.HasIndex(i => new { i.PaneId, i.ClaimId });
+
+                b.Property(p => p.Id).ValueGeneratedOnAdd();
+                b.Property(p => p.ClaimValue).IsRequired(); // 不限长度
+
+                if (options.MapRelationship)
+                {
+                    b.HasMany<Claim>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
+                    b.HasMany<Pane>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
+                }
+            });
+
+            modelBuilder.Entity<PaneUnit>(b =>
+            {
+                b.ToTableByPluralize();
+
+                b.HasKey(k => k.Id);
+
+                b.HasIndex(i => i.PaneId);
+
+                b.Property(p => p.Id).ValueGeneratedOnAdd();
+
+                if (options.MapRelationship)
+                {
+                    b.HasMany<Pane>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
+                }
+            });
+
             modelBuilder.Entity<Tag>(b =>
             {
                 b.ToTableByPluralize();
@@ -119,11 +175,12 @@ namespace Librame.Extensions.Content.Accessing
                 b.Property(p => p.Subtitle).HasMaxLength(256);
                 b.Property(p => p.Reference).HasMaxLength(256);
                 b.Property(p => p.PublishedAs).HasMaxLength(256);
+                b.Property(p => p.Cover).HasMaxLength(256);
+                b.Property(p => p.Body);
 
                 if (options.MapRelationship)
                 {
                     b.HasMany<Category>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
-                    b.HasMany<Pane>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
                     b.HasMany<Source>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
                     b.HasMany<UnitClaim>().WithOne().HasForeignKey(fk => fk.UnitId).IsRequired();
                     b.HasMany<UnitVisitCount>().WithOne().HasForeignKey(fk => fk.UnitId).IsRequired();
@@ -182,46 +239,6 @@ namespace Librame.Extensions.Content.Accessing
                 if (options.MapRelationship)
                 {
                     b.HasMany<Unit>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
-                }
-            });
-
-            modelBuilder.Entity<Pane>(b =>
-            {
-                b.ToTableByPluralize();
-
-                b.HasKey(k => k.Id);
-
-                b.HasIndex(i => new { i.ParentId, i.Name }).IsUnique();
-
-                b.Property(p => p.Id).ValueGeneratedOnAdd();
-                b.Property(p => p.ParentId);
-                b.Property(p => p.Name).HasMaxLength(256);
-                b.Property(p => p.Description).HasMaxLength(256);
-                b.Property(p => p.Icon).HasMaxLength(256);
-                b.Property(p => p.More).HasMaxLength(256);
-
-                if (options.MapRelationship)
-                {
-                    b.HasMany<PaneClaim>().WithOne().HasForeignKey(fk => fk.PaneId).IsRequired();
-                    b.HasMany<Unit>().WithOne().HasForeignKey(fk => fk.PaneId).IsRequired();
-                }
-            });
-
-            modelBuilder.Entity<PaneClaim>(b =>
-            {
-                b.ToTableByPluralize();
-
-                b.HasKey(k => k.Id);
-
-                b.HasIndex(i => new { i.PaneId, i.ClaimId });
-
-                b.Property(p => p.Id).ValueGeneratedOnAdd();
-                b.Property(p => p.ClaimValue).IsRequired(); // 不限长度
-
-                if (options.MapRelationship)
-                {
-                    b.HasMany<Claim>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
-                    b.HasMany<Pane>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
                 }
             });
 

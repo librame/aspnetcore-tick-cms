@@ -19,7 +19,9 @@ namespace Librame.Extensions.Portal.Accessing
     /// <summary>
     /// 定义实现 <see cref="IContentAccessor"/> 的门户访问器接口。
     /// </summary>
-    public interface IPortalAccessor : IContentAccessor
+    /// <typeparam name="TUser">指定实现 <see cref="IUser"/> 的用户类型。</typeparam>
+    public interface IPortalAccessor<TUser> : IContentAccessor
+        where TUser : class, IUser
     {
         /// <summary>
         /// 编者数据集。
@@ -29,6 +31,6 @@ namespace Librame.Extensions.Portal.Accessing
         /// <summary>
         /// 用户数据集。
         /// </summary>
-        DbSet<IntegrationUser> Users { get; set; }
+        DbSet<TUser> Users { get; set; }
     }
 }

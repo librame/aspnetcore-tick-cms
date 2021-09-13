@@ -73,6 +73,16 @@ namespace Librame.Extensions.Content.Resources
         public string Reference { get; set; }
 
         /// <summary>
+        /// 封面。
+        /// </summary>
+        public string Cover { get; set; }
+
+        /// <summary>
+        /// 主体。
+        /// </summary>
+        public string Body { get; set; }
+
+        /// <summary>
         /// 名称。
         /// </summary>
         public string Name { get; set; }
@@ -101,6 +111,11 @@ namespace Librame.Extensions.Content.Resources
         /// 更多。
         /// </summary>
         public string More { get; set; }
+
+        /// <summary>
+        /// 模板。
+        /// </summary>
+        public string Template { get; set; }
 
 #pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
 

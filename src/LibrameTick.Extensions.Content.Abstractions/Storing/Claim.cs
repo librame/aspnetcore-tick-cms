@@ -24,12 +24,6 @@ namespace Librame.Extensions.Content.Storing
     public class Claim : AbstractCreationIdentifier<int, string>, IEquatable<Claim>
     {
         /// <summary>
-        /// 类别标识。
-        /// </summary>
-        [Display(Name = nameof(CategoryId), ResourceType = typeof(ContentResource))]
-        public virtual int CategoryId { get; set; }
-
-        /// <summary>
         /// 名称。
         /// </summary>
         [Display(Name = nameof(Name), ResourceType = typeof(ContentResource))]
@@ -51,7 +45,7 @@ namespace Librame.Extensions.Content.Storing
         /// <param name="other">给定的 <see cref="Claim"/>。</param>
         /// <returns>返回布尔值。</returns>
         public bool Equals(Claim? other)
-            => other != null && other.CategoryId == CategoryId && other.Name == Name;
+            => other != null && other.Name == Name;
 
         /// <summary>
         /// 获取哈希码。
@@ -65,7 +59,7 @@ namespace Librame.Extensions.Content.Storing
         /// </summary>
         /// <returns>返回字符串。</returns>
         public override string ToString()
-            => $"{base.ToString()};{nameof(CategoryId)}={CategoryId};{nameof(Name)}={Name}";
+            => $"{base.ToString()};{nameof(Name)}={Name}";
 
         #endregion
 
