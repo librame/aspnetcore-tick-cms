@@ -12,25 +12,23 @@
 
 using Librame.Extensions.Content.Accessing;
 using Librame.Extensions.Portal.Storing;
-using Microsoft.EntityFrameworkCore;
 
-namespace Librame.Extensions.Portal.Accessing
+namespace Librame.Extensions.Portal.Accessing;
+
+/// <summary>
+/// 定义实现 <see cref="IContentAccessor"/> 的门户访问器接口。
+/// </summary>
+/// <typeparam name="TUser">指定实现 <see cref="IUser"/> 的用户类型。</typeparam>
+public interface IPortalAccessor<TUser> : IContentAccessor
+    where TUser : class, IUser
 {
     /// <summary>
-    /// 定义实现 <see cref="IContentAccessor"/> 的门户访问器接口。
+    /// 编者数据集。
     /// </summary>
-    /// <typeparam name="TUser">指定实现 <see cref="IUser"/> 的用户类型。</typeparam>
-    public interface IPortalAccessor<TUser> : IContentAccessor
-        where TUser : class, IUser
-    {
-        /// <summary>
-        /// 编者数据集。
-        /// </summary>
-        DbSet<Editor> Editors { get; set; }
+    DbSet<Editor> Editors { get; set; }
 
-        /// <summary>
-        /// 用户数据集。
-        /// </summary>
-        DbSet<TUser> Users { get; set; }
-    }
+    /// <summary>
+    /// 用户数据集。
+    /// </summary>
+    DbSet<TUser> Users { get; set; }
 }

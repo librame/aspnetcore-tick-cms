@@ -10,20 +10,19 @@
 
 #endregion
 
-namespace Librame.Extensions.Portal
+namespace Librame.Extensions.Portal;
+
+class InternalPasswordHasher<TUser> : IPasswordHasher<TUser>
 {
-    class InternalPasswordHasher<TUser> : IPasswordHasher<TUser>
+    public string HashPassword(TUser user, string password)
+        => password.FromEncodingString().AsSha256().AsAes().AsBase64String();
+
+    public bool VerifyHashedPassword(TUser user, string hashedPassword, string providedPassword)
     {
-        public string HashPassword(TUser user, string password)
-            => password.FromEncodingString().AsSha256().AsAes().AsBase64String();
+        var hashedBuffer = hashedPassword.FromBase64String().FromAes();
+        var providedBuffer = providedPassword.FromEncodingString().AsSha256();
 
-        public bool VerifyHashedPassword(TUser user, string hashedPassword, string providedPassword)
-        {
-            var hashedBuffer = hashedPassword.FromBase64String().FromAes();
-            var providedBuffer = providedPassword.FromEncodingString().AsSha256();
-
-            return hashedBuffer.SequenceEqual(providedBuffer);
-        }
-
+        return hashedBuffer.SequenceEqual(providedBuffer);
     }
+
 }

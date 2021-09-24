@@ -12,53 +12,54 @@
 
 using Librame.Extensions.Content.Resources;
 using Librame.Extensions.Data;
-using System.ComponentModel.DataAnnotations;
+using Librame.Extensions.Data.Sharding;
 
-namespace Librame.Extensions.Content.Storing
+namespace Librame.Extensions.Content.Storing;
+
+/// <summary>
+/// 单元标签。
+/// </summary>
+[Description("单元标签")]
+[Sharded(typeof(DateTimeShardingStrategy), "%y")]
+public class UnitTag : AbstractCreationIdentifier<long, string>, IEquatable<UnitTag>
 {
     /// <summary>
-    /// 单元标签。
+    /// 单元标识。
     /// </summary>
-    public class UnitTag : AbstractCreationIdentifier<long, string>, IEquatable<UnitTag>
-    {
-        /// <summary>
-        /// 单元标识。
-        /// </summary>
-        [Display(Name = nameof(UnitId), ResourceType = typeof(ContentResource))]
-        public virtual long UnitId { get; set; }
+    [Display(Name = nameof(UnitId), ResourceType = typeof(ContentResource))]
+    public virtual long UnitId { get; set; }
 
-        /// <summary>
-        /// 标签标识。
-        /// </summary>
-        [Display(Name = nameof(TagId), ResourceType = typeof(ContentResource))]
-        public virtual int TagId { get; set; }
+    /// <summary>
+    /// 标签标识。
+    /// </summary>
+    [Display(Name = nameof(TagId), ResourceType = typeof(ContentResource))]
+    public virtual int TagId { get; set; }
 
 
-        #region Override
+    #region Override
 
-        /// <summary>
-        /// 比较相等（默认比较单元标识与标签标识）。
-        /// </summary>
-        /// <param name="other">给定的 <see cref="UnitTag"/>。</param>
-        /// <returns>返回布尔值。</returns>
-        public bool Equals(UnitTag? other)
-            => other != null && other.UnitId == UnitId && other.TagId == TagId;
+    /// <summary>
+    /// 比较相等（默认比较单元标识与标签标识）。
+    /// </summary>
+    /// <param name="other">给定的 <see cref="UnitTag"/>。</param>
+    /// <returns>返回布尔值。</returns>
+    public bool Equals(UnitTag? other)
+        => other is not null && other.UnitId == UnitId && other.TagId == TagId;
 
-        /// <summary>
-        /// 获取哈希码。
-        /// </summary>
-        /// <returns>返回 32 位整数。</returns>
-        public override int GetHashCode()
-            => ToString().GetHashCode();
+    /// <summary>
+    /// 获取哈希码。
+    /// </summary>
+    /// <returns>返回 32 位整数。</returns>
+    public override int GetHashCode()
+        => ToString().GetHashCode();
 
-        /// <summary>
-        /// 转换为字符串。
-        /// </summary>
-        /// <returns>返回字符串。</returns>
-        public override string ToString()
-            => $"{base.ToString()};{nameof(UnitId)}={UnitId};{nameof(TagId)}={TagId}";
+    /// <summary>
+    /// 转换为字符串。
+    /// </summary>
+    /// <returns>返回字符串。</returns>
+    public override string ToString()
+        => $"{base.ToString()};{nameof(UnitId)}={UnitId};{nameof(TagId)}={TagId}";
 
-        #endregion
+    #endregion
 
-    }
 }

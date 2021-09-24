@@ -13,26 +13,25 @@
 using Librame.Extensions.Content;
 using Librame.Extensions.Core;
 
-namespace Librame.Extensions.Portal
+namespace Librame.Extensions.Portal;
+
+/// <summary>
+/// 门户扩展构建器。
+/// </summary>
+public class PortalExtensionBuilder : AbstractExtensionBuilder<PortalExtensionOptions, PortalExtensionBuilder>
 {
     /// <summary>
-    /// 门户扩展构建器。
+    /// 构造一个 <see cref="PortalExtensionBuilder"/>。
     /// </summary>
-    public class PortalExtensionBuilder : AbstractExtensionBuilder<PortalExtensionOptions, PortalExtensionBuilder>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="contentBuilder"/> 或 <paramref name="options"/> 为空。
+    /// </exception>
+    /// <param name="contentBuilder">给定的 <see cref="ContentExtensionBuilder"/>。</param>
+    /// <param name="options">给定的 <see cref="PortalExtensionOptions"/>。</param>
+    public PortalExtensionBuilder(ContentExtensionBuilder contentBuilder, PortalExtensionOptions options)
+        : base(contentBuilder, options)
     {
-        /// <summary>
-        /// 构造一个 <see cref="PortalExtensionBuilder"/>。
-        /// </summary>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="contentBuilder"/> 或 <paramref name="options"/> 为空。
-        /// </exception>
-        /// <param name="contentBuilder">给定的 <see cref="ContentExtensionBuilder"/>。</param>
-        /// <param name="options">给定的 <see cref="PortalExtensionOptions"/>。</param>
-        public PortalExtensionBuilder(ContentExtensionBuilder contentBuilder, PortalExtensionOptions options)
-            : base(contentBuilder, options)
-        {
-            TryAddOrReplaceService(typeof(IPasswordHasher<>), typeof(InternalPasswordHasher<>));
-        }
-
+        TryAddOrReplaceService(typeof(IPasswordHasher<>), typeof(InternalPasswordHasher<>));
     }
+
 }

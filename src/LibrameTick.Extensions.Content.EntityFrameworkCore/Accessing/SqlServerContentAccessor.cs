@@ -10,23 +10,20 @@
 
 #endregion
 
-using Microsoft.EntityFrameworkCore;
+namespace Librame.Extensions.Content.Accessing;
 
-namespace Librame.Extensions.Content.Accessing
+/// <summary>
+/// 定义适用于 SQLServer 的内容访问器。
+/// </summary>
+public class SqlServerContentAccessor : AbstractContentAccessor<SqlServerContentAccessor>
 {
     /// <summary>
-    /// 定义适用于 SQLServer 的内容访问器。
+    /// 构造一个 <see cref="SqlServerContentAccessor"/>。
     /// </summary>
-    public class SqlServerContentAccessor : AbstractContentAccessor<SqlServerContentAccessor>
+    /// <param name="options">给定的 <see cref="DbContextOptions{SqlServerContentAccessor}"/>。</param>
+    public SqlServerContentAccessor(DbContextOptions<SqlServerContentAccessor> options)
+        : base(options)
     {
-        /// <summary>
-        /// 构造一个 <see cref="SqlServerContentAccessor"/>。
-        /// </summary>
-        /// <param name="options">给定的 <see cref="DbContextOptions{SqlServerContentAccessor}"/>。</param>
-        public SqlServerContentAccessor(DbContextOptions<SqlServerContentAccessor> options)
-            : base(options)
-        {
-        }
-
     }
+
 }

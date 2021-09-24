@@ -1,31 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MySqlConnector;
+﻿namespace WebExample;
 
-namespace WebExample
+static class MySqlConnectionStringHelper
 {
-    static class MySqlConnectionStringHelper
+
+    public static string Validate(string connectionString, out ServerVersion version)
     {
-
-        public static string Validate(string connectionString, out ServerVersion version)
+        var csb = new MySqlConnectionStringBuilder(connectionString);
+        if (csb.AllowUserVariables != true || csb.UseAffectedRows)
         {
-            var csb = new MySqlConnectionStringBuilder(connectionString);
-            if (csb.AllowUserVariables != true || csb.UseAffectedRows)
+            try
             {
-                try
-                {
-                    csb.AllowUserVariables = true;
-                    csb.UseAffectedRows = false;
-                }
-                catch (MySqlException e)
-                {
-                    throw new InvalidOperationException("The MySql Connection string used with Pomelo.EntityFrameworkCore.MySql " +
-                        "must contain \"AllowUserVariables=true;UseAffectedRows=false\"", e);
-                }
+                csb.AllowUserVariables = true;
+                csb.UseAffectedRows = false;
             }
-
-            version = ServerVersion.AutoDetect(connectionString);
-            return csb.ConnectionString;
+            catch (MySqlException e)
+            {
+                throw new InvalidOperationException("The MySql Connection string used with Pomelo.EntityFrameworkCore.MySql " +
+                    "must contain \"AllowUserVariables=true;UseAffectedRows=false\"", e);
+            }
         }
 
+        version = ServerVersion.AutoDetect(connectionString);
+        return csb.ConnectionString;
     }
+
 }

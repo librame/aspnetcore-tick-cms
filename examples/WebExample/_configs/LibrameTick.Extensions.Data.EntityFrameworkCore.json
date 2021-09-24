@@ -1,8 +1,19 @@
 ﻿{
   "Access": {
-    "EnsureDatabaseDeleted": true,
+    "EnsureDatabaseDeleted": false,
     "EnsureDatabaseCreated": true,
     "AutomaticMigration": true
+  },
+  "Audit": {
+    "AddedState": true,
+    "ModifiedState": true,
+    "DeletedState": true,
+    "UnchangedState": false,
+    "SaveAudits": true
+  },
+  "Store": {
+    "MapRelationship": false,
+    "LimitableMaxLengthOfProperty": 250
   },
   "Directories": {
     "BaseDirectory": "D:\\Repositories\\extensions-tick-cms\\examples\\WebExample",
