@@ -18,8 +18,11 @@
     "\u539F\u521B": {}
   },
   "InitialTags": [
-    "\u6D4B\u8BD5\u6807\u7B7E"
+    "\u6807\u7B7E1",
+    "\u6807\u7B7E2",
+    "\u6807\u7B7E3"
   ],
+  "InitialUnitCover": "images/default.png",
   "Directories": {
     "BaseDirectory": "D:\\Repositories\\extensions-tick-cms\\examples\\WebExample",
     "ConfigDirectory": "D:\\Repositories\\extensions-tick-cms\\examples\\WebExample\\_configs",

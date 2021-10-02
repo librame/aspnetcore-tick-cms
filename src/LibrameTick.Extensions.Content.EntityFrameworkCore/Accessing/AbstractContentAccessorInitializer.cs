@@ -10,7 +10,6 @@
 
 #endregion
 
-using Librame.Extensions.Data;
 using Librame.Extensions.Data.Accessing;
 
 namespace Librame.Extensions.Content.Accessing;
@@ -52,18 +51,7 @@ public abstract class AbstractContentAccessorInitializer<TAccessor, TSeeder> : A
 
         TryPopulateDbSet(Seeder.GetTags, accssor => accssor.Tags);
 
-        if (!Accessor.Units.LocalOrDbAny())
-        {
-            var units = Seeder.GetUnits();
-            var paneIds = Seeder.GetPanes().Select(s => s.Id);
-            var tagNames = Seeder.GetTags().Select(s => s.Name);
-
-            Accessor.AddUnits(units, Seeder.IdGeneratorFactory, Seeder.Clock,
-                Seeder.GetInitialUserId(), paneIds, claims: null, tagNames);
-
-            if (!IsPopulated)
-                IsPopulated = true;
-        }
+        TryPopulateDbSet(Seeder.GetUnits, accssor => accssor.Units);
     }
 
     /// <summary>
@@ -90,18 +78,8 @@ public abstract class AbstractContentAccessorInitializer<TAccessor, TSeeder> : A
         await TryPopulateDbSetAsync(async token => await Seeder.GetTagsAsync(token),
             accessor => accessor.Tags, cancellationToken);
 
-        if (!await Accessor.Units.LocalOrDbAnyAsync(cancellationToken: cancellationToken))
-        {
-            var units = await Seeder.GetUnitsAsync(cancellationToken);
-            var paneIds = (await Seeder.GetPanesAsync(cancellationToken)).Select(s => s.Id);
-            var tagNames = (await Seeder.GetTagsAsync(cancellationToken)).Select(s => s.Name);
-
-            Accessor.AddUnits(units, Seeder.IdGeneratorFactory, Seeder.Clock,
-                Seeder.GetInitialUserId()!, paneIds, claims: null, tagNames);
-
-            if (!IsPopulated)
-                IsPopulated = true;
-        }
+        await TryPopulateDbSetAsync(async token => await Seeder.GetUnitsAsync(token),
+            accessor => accessor.Units, cancellationToken);
     }
 
 }

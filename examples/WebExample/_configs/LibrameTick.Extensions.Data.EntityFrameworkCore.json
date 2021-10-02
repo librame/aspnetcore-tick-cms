@@ -5,6 +5,7 @@
     "AutomaticMigration": true
   },
   "Audit": {
+    "Enabling": true,
     "AddedState": true,
     "ModifiedState": true,
     "DeletedState": true,
@@ -12,7 +13,7 @@
     "SaveAudits": true
   },
   "Store": {
-    "MapRelationship": false,
+    "MapRelationship": true,
     "LimitableMaxLengthOfProperty": 250
   },
   "Directories": {

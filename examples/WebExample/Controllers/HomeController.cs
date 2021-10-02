@@ -2,16 +2,22 @@
 
 public class HomeController : Controller
 {
-    private readonly IStore<Unit> _unitStore;
+    private readonly IServiceProvider _services;
 
-    public HomeController(IStore<Unit> unitStore)
+
+    public HomeController(IServiceProvider services)
     {
-        _unitStore = unitStore;
+        _services = services;
     }
+
 
     public IActionResult Index()
     {
-        return View(_unitStore.FindList());
+        var dict = _services.GetPaneUnits(9, out var userIds);
+
+        ViewBag.Editors = _services.GetEditorsByUserIds(userIds);
+
+        return View(dict);
     }
 
     public IActionResult Privacy()
@@ -24,4 +30,5 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
 }

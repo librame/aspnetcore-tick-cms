@@ -42,13 +42,53 @@ public class Category : AbstractCreationIdentifier<int, string>, IParentIdentifi
     public virtual string? Description { get; set; }
 
 
+    /// <summary>
+    /// 窗格集合。
+    /// </summary>
+    public virtual List<Pane>? Panes {  get; set; }
+
+    /// <summary>
+    /// 单元集合。
+    /// </summary>
+    public virtual List<Unit>? Units {  get; set; }
+
+
+    /// <summary>
+    /// 添加导航窗格。
+    /// </summary>
+    /// <param name="pane">给定的 <see cref="Pane"/>。</param>
+    /// <returns>返回 <see cref="Category"/>。</returns>
+    public virtual Category AddPane(Pane pane)
+    {
+        if (Panes is null)
+            Panes = new();
+
+        Panes.Add(pane);
+        return this;
+    }
+
+    /// <summary>
+    /// 添加导航单元。
+    /// </summary>
+    /// <param name="unit">给定的 <see cref="Unit"/>。</param>
+    /// <returns>返回 <see cref="Category"/>。</returns>
+    public virtual Category AddUnit(Unit unit)
+    {
+        if (Units is null)
+            Units = new();
+
+        Units.Add(unit);
+        return this;
+    }
+
+
     #region IObjectIdentifier
 
     /// <summary>
     /// 获取对象父级标识。
     /// </summary>
     /// <returns>返回标识对象。</returns>
-    public object GetObjectParentId()
+    public object? GetObjectParentId()
         => ParentId;
 
     /// <summary>
@@ -56,7 +96,7 @@ public class Category : AbstractCreationIdentifier<int, string>, IParentIdentifi
     /// </summary>
     /// <param name="cancellationToken">给定的 <see cref="CancellationToken"/>（可选）。</param>
     /// <returns>返回一个包含标识对象的异步操作。</returns>
-    public ValueTask<object> GetObjectParentIdAsync(CancellationToken cancellationToken = default)
+    public ValueTask<object?> GetObjectParentIdAsync(CancellationToken cancellationToken = default)
         => cancellationToken.RunValueTask(GetObjectParentId);
 
 
@@ -65,7 +105,7 @@ public class Category : AbstractCreationIdentifier<int, string>, IParentIdentifi
     /// </summary>
     /// <param name="newParentId">给定的新父级标识。</param>
     /// <returns>返回标识对象。</returns>
-    public object SetObjectParentId(object newParentId)
+    public object? SetObjectParentId(object? newParentId)
     {
         ParentId = ToId(newParentId, nameof(newParentId));
         return newParentId;
@@ -77,7 +117,7 @@ public class Category : AbstractCreationIdentifier<int, string>, IParentIdentifi
     /// <param name="newParentId">给定的新父级标识。</param>
     /// <param name="cancellationToken">给定的 <see cref="CancellationToken"/>（可选）。</param>
     /// <returns>返回一个包含标识对象的异步操作。</returns>
-    public ValueTask<object> SetObjectParentIdAsync(object newParentId, CancellationToken cancellationToken = default)
+    public ValueTask<object?> SetObjectParentIdAsync(object? newParentId, CancellationToken cancellationToken = default)
         => cancellationToken.RunValueTask(() => SetObjectParentId(newParentId));
 
     #endregion

@@ -36,6 +36,19 @@ public class UnitTag : AbstractCreationIdentifier<long, string>, IEquatable<Unit
     public virtual int TagId { get; set; }
 
 
+    /// <summary>
+    /// 单元。
+    /// </summary>
+    [JsonIgnore]
+    public virtual Unit? Unit { get; set; }
+
+    /// <summary>
+    /// 标签。
+    /// </summary>
+    [JsonIgnore]
+    public virtual Tag? Tag { get; set; }
+
+
     #region Override
 
     /// <summary>

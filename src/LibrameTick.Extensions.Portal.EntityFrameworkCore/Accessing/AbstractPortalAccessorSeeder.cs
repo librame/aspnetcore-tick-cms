@@ -120,6 +120,7 @@ public abstract class AbstractPortalAccessorSeeder<TUser> : AbstractContentAcces
                 editor.Id = IdGeneratorFactory.GetNewId<string>();
                 editor.Name = pair.Key;
                 editor.Description = pair.Value.Description;
+                editor.Portrait = pair.Value.Portrait;
                 editor.UserId = users.First(p => p.UserName == pair.Value.UserName).Id;
 
                 editor.PopulateCreation(GetInitialUserId(), Clock.GetUtcNow());

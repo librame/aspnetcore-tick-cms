@@ -29,6 +29,27 @@ public class Tag : AbstractCreationIdentifier<int, string>, IEquatable<Tag>
         = string.Empty;
 
 
+    /// <summary>
+    /// 单元标签集合。
+    /// </summary>
+    public virtual List<UnitTag>? UnitTags { get; set; }
+
+
+    /// <summary>
+    /// 添加导航单元声明。
+    /// </summary>
+    /// <param name="unitTag">给定的 <see cref="UnitTag"/>。</param>
+    /// <returns>返回 <see cref="Tag"/>。</returns>
+    public virtual Tag AddUnitTag(UnitTag unitTag)
+    {
+        if (UnitTags is null)
+            UnitTags = new();
+
+        UnitTags.Add(unitTag);
+        return this;
+    }
+
+
     #region Override
 
     /// <summary>

@@ -66,13 +66,59 @@ public class Pane : AbstractCreationIdentifier<int, string>, IParentIdentifier<i
     public virtual string? Template { get; set; }
 
 
+    /// <summary>
+    /// 分类。
+    /// </summary>
+    [JsonIgnore]
+    public virtual Category? Category {  get; set; }
+
+    /// <summary>
+    /// 窗格声明集合。
+    /// </summary>
+    public virtual List<PaneClaim>? PaneClaims { get; set; }
+
+    /// <summary>
+    /// 窗格单元集合。
+    /// </summary>
+    public virtual List<PaneUnit>? PaneUnits { get; set; }
+
+
+    /// <summary>
+    /// 添加导航窗格声明。
+    /// </summary>
+    /// <param name="paneClaim">给定的 <see cref="PaneClaim"/>。</param>
+    /// <returns>返回 <see cref="Pane"/>。</returns>
+    public virtual Pane AddPaneClaim(PaneClaim paneClaim)
+    {
+        if (PaneClaims is null)
+            PaneClaims = new();
+
+        PaneClaims.Add(paneClaim);
+        return this;
+    }
+
+    /// <summary>
+    /// 添加导航窗格单元。
+    /// </summary>
+    /// <param name="paneUnit">给定的 <see cref="PaneUnit"/>。</param>
+    /// <returns>返回 <see cref="Pane"/>。</returns>
+    public virtual Pane AddPaneUnit(PaneUnit paneUnit)
+    {
+        if (PaneUnits is null)
+            PaneUnits = new();
+
+        PaneUnits.Add(paneUnit);
+        return this;
+    }
+
+
     #region IObjectIdentifier
 
     /// <summary>
     /// 获取对象父级标识。
     /// </summary>
     /// <returns>返回标识对象。</returns>
-    public object GetObjectParentId()
+    public object? GetObjectParentId()
         => ParentId;
 
     /// <summary>
@@ -80,7 +126,7 @@ public class Pane : AbstractCreationIdentifier<int, string>, IParentIdentifier<i
     /// </summary>
     /// <param name="cancellationToken">给定的 <see cref="CancellationToken"/>（可选）。</param>
     /// <returns>返回一个包含标识对象的异步操作。</returns>
-    public ValueTask<object> GetObjectParentIdAsync(CancellationToken cancellationToken = default)
+    public ValueTask<object?> GetObjectParentIdAsync(CancellationToken cancellationToken = default)
         => cancellationToken.RunValueTask(GetObjectParentId);
 
 
@@ -89,7 +135,7 @@ public class Pane : AbstractCreationIdentifier<int, string>, IParentIdentifier<i
     /// </summary>
     /// <param name="newParentId">给定的新父级标识。</param>
     /// <returns>返回标识对象。</returns>
-    public object SetObjectParentId(object newParentId)
+    public object? SetObjectParentId(object? newParentId)
     {
         ParentId = ToId(newParentId, nameof(newParentId));
         return newParentId;
@@ -101,7 +147,7 @@ public class Pane : AbstractCreationIdentifier<int, string>, IParentIdentifier<i
     /// <param name="newParentId">给定的新父级标识。</param>
     /// <param name="cancellationToken">给定的 <see cref="CancellationToken"/>（可选）。</param>
     /// <returns>返回一个包含标识对象的异步操作。</returns>
-    public ValueTask<object> SetObjectParentIdAsync(object newParentId, CancellationToken cancellationToken = default)
+    public ValueTask<object?> SetObjectParentIdAsync(object? newParentId, CancellationToken cancellationToken = default)
         => cancellationToken.RunValueTask(() => SetObjectParentId(newParentId));
 
     #endregion

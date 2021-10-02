@@ -86,7 +86,18 @@ public class ContentExtensionOptions : AbstractExtensionOptions<ContentExtension
     public List<string> InitialTags { get; set; }
         = new List<string>
         {
-            "测试标签"
+            "标签1",
+            "标签2",
+            "标签3"
         };
+
+    /// <summary>
+    /// 初始化单元封面图片。
+    /// </summary>
+    public string InitialUnitCover
+    {
+        get => Notifier.GetOrAdd(nameof(InitialUnitCover), "images/default.png");
+        set => Notifier.AddOrUpdate(nameof(InitialUnitCover), value);
+    }
 
 }

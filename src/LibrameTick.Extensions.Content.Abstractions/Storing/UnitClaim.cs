@@ -43,6 +43,19 @@ public class UnitClaim : AbstractCreationIdentifier<long, string>, IEquatable<Un
         = string.Empty;
 
 
+    /// <summary>
+    /// 单元。
+    /// </summary>
+    [JsonIgnore]
+    public virtual Unit? Unit { get; set; }
+
+    /// <summary>
+    /// 声明。
+    /// </summary>
+    [JsonIgnore]
+    public virtual Claim? Claim { get; set; }
+
+
     #region Override
 
     /// <summary>

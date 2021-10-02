@@ -41,17 +41,12 @@ public class PortalExtensionOptions : AbstractExtensionOptions<PortalExtensionOp
     public ContentExtensionOptions ContentOptions { get; init; }
 
     /// <summary>
-    /// 映射关系（默认不映射）。
-    /// </summary>
-    public bool MapRelationship { get; set; }
-
-    /// <summary>
     /// 初始编者字典集合（键表示名称，值元组分别表示用户名称、编者备注）。
     /// </summary>
-    public Dictionary<string, (string UserName, string? Description)> InitialEditors { get; set; }
-        = new Dictionary<string, (string UserName, string? Description)>
+    public Dictionary<string, (string UserName, string? Portrait, string? Description)> InitialEditors { get; set; }
+        = new Dictionary<string, (string UserName, string? Portrait, string? Description)>
         {
-            { "主编", ( "admin", "初始主编" ) }
+            { "小编", ( "admin", "portraits/default.png", "初始小编" ) }
         };
 
     /// <summary>
@@ -67,7 +62,10 @@ public class PortalExtensionOptions : AbstractExtensionOptions<PortalExtensionOp
     /// 初始密码。
     /// </summary>
     [Encrypted]
-    public string InitialPassword { get; set; }
-        = "123456";
+    public string InitialPassword
+    {
+        get => Notifier.GetOrAdd(nameof(InitialPassword), "123456");
+        set => Notifier.AddOrUpdate(nameof(InitialPassword), value);
+    }
 
 }

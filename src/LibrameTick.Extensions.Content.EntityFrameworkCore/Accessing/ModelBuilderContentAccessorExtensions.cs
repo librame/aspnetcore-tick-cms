@@ -46,11 +46,8 @@ public static class ModelBuilderContentAccessorExtensions
             b.Property(p => p.Name).HasMaxLength(50).IsRequired();
 
             if (limitableMaxLength > 0)
-                b.Property(p => p.Description).HasMaxLength(limitableMaxLength);
-
-            if (mapRelationship)
             {
-                b.HasMany<Unit>().WithOne().HasForeignKey(fk => fk.CategoryId).IsRequired();
+                b.Property(p => p.Description).HasMaxLength(limitableMaxLength);
             }
         });
 
@@ -72,11 +69,6 @@ public static class ModelBuilderContentAccessorExtensions
                 b.Property(p => p.Website).HasMaxLength(limitableMaxLength);
                 b.Property(p => p.Weblogo).HasMaxLength(limitableMaxLength);
             }
-
-            if (mapRelationship)
-            {
-                b.HasMany<Unit>().WithOne().HasForeignKey(fk => fk.SourceId).IsRequired();
-            }
         });
 
         modelBuilder.Entity<Claim>(b =>
@@ -91,12 +83,8 @@ public static class ModelBuilderContentAccessorExtensions
             b.Property(p => p.Name).HasMaxLength(50).IsRequired();
 
             if (limitableMaxLength > 0)
-                b.Property(p => p.Description).HasMaxLength(limitableMaxLength);
-
-            if (mapRelationship)
             {
-                b.HasMany<PaneClaim>().WithOne().HasForeignKey(fk => fk.ClaimId).IsRequired();
-                b.HasMany<UnitClaim>().WithOne().HasForeignKey(fk => fk.ClaimId).IsRequired();
+                b.Property(p => p.Description).HasMaxLength(limitableMaxLength);
             }
         });
 
@@ -121,8 +109,7 @@ public static class ModelBuilderContentAccessorExtensions
 
             if (mapRelationship)
             {
-                b.HasMany<PaneClaim>().WithOne().HasForeignKey(fk => fk.PaneId).IsRequired();
-                b.HasMany<PaneUnit>().WithOne().HasForeignKey(fk => fk.PaneId).IsRequired();
+                b.HasOne(f => f.Category).WithMany(p => p.Panes).HasForeignKey(fk => fk.CategoryId);
             }
         });
 
@@ -139,8 +126,8 @@ public static class ModelBuilderContentAccessorExtensions
 
             if (mapRelationship)
             {
-                b.HasMany<Claim>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
-                b.HasMany<Pane>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
+                b.HasOne(f => f.Pane).WithMany(p => p.PaneClaims).HasForeignKey(fk => fk.PaneId);
+                b.HasOne(f => f.Claim).WithMany(p => p.PaneClaims).HasForeignKey(fk => fk.ClaimId);
             }
         });
 
@@ -150,13 +137,14 @@ public static class ModelBuilderContentAccessorExtensions
 
             b.HasKey(k => k.Id);
 
-            b.HasIndex(i => i.PaneId);
+            b.HasIndex(i => new { i.PaneId, i.UnitId });
 
             b.Property(p => p.Id).ValueGeneratedOnAdd();
 
             if (mapRelationship)
             {
-                b.HasMany<Pane>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
+                b.HasOne(f => f.Pane).WithMany(p => p.PaneUnits).HasForeignKey(fk => fk.PaneId);
+                b.HasOne(f => f.Unit).WithMany(p => p.PaneUnits).HasForeignKey(fk => fk.UnitId).OnDelete(DeleteBehavior.NoAction);
             }
         });
 
@@ -170,11 +158,6 @@ public static class ModelBuilderContentAccessorExtensions
 
             b.Property(p => p.Id).ValueGeneratedOnAdd();
             b.Property(p => p.Name).HasMaxLength(50).IsRequired();
-
-            if (mapRelationship)
-            {
-                b.HasMany<UnitTag>().WithOne().HasForeignKey(fk => fk.TagId).IsRequired();
-            }
         });
 
         modelBuilder.Entity<Unit>(b =>
@@ -197,14 +180,12 @@ public static class ModelBuilderContentAccessorExtensions
                 b.Property(p => p.Cover).HasMaxLength(limitableMaxLength);
             }
 
-            b.Property(p => p.Body);
+            b.Property(p => p.Body); // 不限长度
 
             if (mapRelationship)
             {
-                b.HasMany<Category>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
-                b.HasMany<Source>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
-                b.HasMany<UnitClaim>().WithOne().HasForeignKey(fk => fk.UnitId).IsRequired();
-                b.HasMany<UnitVisitCount>().WithOne().HasForeignKey(fk => fk.UnitId).IsRequired();
+                b.HasOne(f => f.Category).WithMany(p => p.Units).HasForeignKey(fk => fk.CategoryId);
+                b.HasOne(f => f.Source).WithMany(p => p.Units).HasForeignKey(fk => fk.SourceId);
             }
         });
 
@@ -221,8 +202,8 @@ public static class ModelBuilderContentAccessorExtensions
 
             if (mapRelationship)
             {
-                b.HasMany<Claim>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
-                b.HasMany<Unit>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
+                b.HasOne(f => f.Unit).WithMany(p => p.Claims).HasForeignKey(fk => fk.UnitId);
+                b.HasOne(f => f.Claim).WithMany(p => p.UnitClaims).HasForeignKey(fk => fk.ClaimId);
             }
         });
 
@@ -238,8 +219,8 @@ public static class ModelBuilderContentAccessorExtensions
 
             if (mapRelationship)
             {
-                b.HasMany<Tag>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
-                b.HasMany<Unit>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
+                b.HasOne(f => f.Unit).WithMany(p => p.Tags).HasForeignKey(fk => fk.UnitId);
+                b.HasOne(f => f.Tag).WithMany(p => p.UnitTags).HasForeignKey(fk => fk.TagId);
             }
         });
 
@@ -261,7 +242,7 @@ public static class ModelBuilderContentAccessorExtensions
 
             if (mapRelationship)
             {
-                b.HasMany<Unit>().WithOne().HasForeignKey(fk => fk.Id).IsRequired();
+                b.HasOne(f => f.Unit).WithOne(p => p.VisitCount).HasForeignKey<UnitVisitCount>(fk => fk.UnitId);
             }
         });
 

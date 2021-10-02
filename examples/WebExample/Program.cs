@@ -11,7 +11,7 @@ var modelAssemblyName = typeof(IntegrationUser).Assembly.FullName;
 //    opts.UseMySql(MySqlConnectionStringHelper.Validate(builder.Configuration.GetConnectionString("MySqlConnectionString"), out var version), version,
 //        a => a.MigrationsAssembly(modelAssemblyName).MigrationsAssembly(modelAssemblyName));
 
-//    opts.UseAccessor(b => b.WithAccess(AccessMode.Write).WithPriority(1));
+//    opts.UseAccessor(b => b.WithAccess(AccessMode.Write));
 //});
 
 builder.Services.AddDbContextPool<SqlServerPortalAccessor<IntegrationUser>>(opts =>
@@ -19,7 +19,7 @@ builder.Services.AddDbContextPool<SqlServerPortalAccessor<IntegrationUser>>(opts
     opts.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionString"),
         a => a.MigrationsAssembly(modelAssemblyName).MigrationsAssembly(modelAssemblyName));
 
-    opts.UseAccessor(b => b.WithAccess(AccessMode.Write).WithPooling().WithPriority(2));
+    opts.UseAccessor(b => b.WithAccess(AccessMode.ReadWrite).WithPooling());
 });
 
 builder.Services.AddDbContext<SqlitePortalAccessor<IntegrationUser>>(opts =>
@@ -27,7 +27,7 @@ builder.Services.AddDbContext<SqlitePortalAccessor<IntegrationUser>>(opts =>
     opts.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnectionString"),
         a => a.MigrationsAssembly(modelAssemblyName).MigrationsAssembly(modelAssemblyName));
 
-    opts.UseAccessor(b => b.WithAccess(AccessMode.Read));
+    opts.UseAccessor(b => b.WithAccess(AccessMode.Write).WithPriority(2f));
 });
 
 builder.Services.AddLibrame()

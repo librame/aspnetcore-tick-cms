@@ -1,6 +1,8 @@
-﻿@model IList<Unit>
+﻿@model Dictionary<Pane, List<Unit>>
 @{
     ViewData["Title"] = "Home Page";
+
+    Dictionary<string, Editor> editors = ViewBag.Editors;
 }
 
 <div class="text-center">
@@ -8,12 +10,62 @@
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-<div class="text-center">
-    <h1 class="display-4">Test Store</h1>
-    <ul>
-        @foreach (var unit in Model!)
-        {
-            <li>Id: @unit.Id, Title: @unit.Title</li>
-        }
-    </ul>
-</div>
+@foreach (var pair in Model!)
+{
+    <div class="container">
+        <div class="row">
+            <div class="section-header">
+                <h2 class="section-title">@pair.Key.Name</h2>
+            </div>
+        </div>
+    
+        <div class="row">
+            @foreach (var unit in pair.Value)
+            {
+                var editor = editors[unit.CreatedBy!];
+
+                <div class="col-lg-4 col-md-6">
+                    <article class="post hentry post-grid">
+
+                        <div class="entry-thumb">
+                            <figure class="thumb-wrap">
+                                <a href="#">
+                                    <img src="/@unit.Cover" alt="post">
+                                </a>
+                            </figure>
+                        </div>
+
+                        <div class="content-entry-wrap">
+                            <div class="entry-content">
+                                <h3 class="entry-title">
+                                    <a href="#">
+                                        @unit.Subtitle
+                                    </a>
+                                </h3>
+                            </div>
+
+                            <div class="entry-meta-content">
+                                <div class="entry-meta-author">
+                                    <div class="entry-author-thumb">
+                                        <img class="avatar photo" src="/@editor.Portrait" alt="author">
+                                    </div>
+                                    <div class="entry-author-name">
+                                        <a href="#">@editor.Name</a>
+                                    </div>
+                                </div>
+
+                                <div class="entry-date">
+                                    <span>@unit.PublishedTime.ToString("yyyy-MM-dd HH:mm")</span>
+                                </div>
+
+                                <div class="entry-category">
+                                    <a class="cat" href="#">@unit.Category?.Name</a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            }
+        </div>
+    </div>
+}

@@ -10,6 +10,7 @@ global using Librame.Extensions.Portal.Accessing;
 global using Librame.Extensions.Portal.Storing;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Caching.Memory;
 global using MySqlConnector;
 global using System;
 global using System.Diagnostics;

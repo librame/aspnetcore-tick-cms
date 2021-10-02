@@ -35,6 +35,46 @@ public class Claim : AbstractCreationIdentifier<int, string>, IEquatable<Claim>
     public virtual string? Description { get; set; }
 
 
+    /// <summary>
+    /// 窗格声明集合。
+    /// </summary>
+    public virtual List<PaneClaim>? PaneClaims { get; set; }
+
+    /// <summary>
+    /// 单元声明集合。
+    /// </summary>
+    public virtual List<UnitClaim>? UnitClaims { get; set; }
+
+
+    /// <summary>
+    /// 添加导航窗格声明。
+    /// </summary>
+    /// <param name="paneClaim">给定的 <see cref="PaneClaim"/>。</param>
+    /// <returns>返回 <see cref="Claim"/>。</returns>
+    public virtual Claim AddPaneClaim(PaneClaim paneClaim)
+    {
+        if (PaneClaims is null)
+            PaneClaims = new();
+
+        PaneClaims.Add(paneClaim);
+        return this;
+    }
+
+    /// <summary>
+    /// 添加导航窗格声明。
+    /// </summary>
+    /// <param name="paneClaim">给定的 <see cref="UnitClaim"/>。</param>
+    /// <returns>返回 <see cref="Claim"/>。</returns>
+    public virtual Claim AddUnitClaim(UnitClaim paneClaim)
+    {
+        if (UnitClaims is null)
+            UnitClaims = new();
+
+        UnitClaims.Add(paneClaim);
+        return this;
+    }
+
+
     #region Override
 
     /// <summary>

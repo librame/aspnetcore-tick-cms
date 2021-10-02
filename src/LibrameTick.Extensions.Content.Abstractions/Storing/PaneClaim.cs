@@ -41,6 +41,19 @@ public class PaneClaim : AbstractCreationIdentifier<int, string>, IEquatable<Pan
         = string.Empty;
 
 
+    /// <summary>
+    /// 窗格。
+    /// </summary>
+    [JsonIgnore]
+    public virtual Pane? Pane { get; set; }
+
+    /// <summary>
+    /// 声明。
+    /// </summary>
+    [JsonIgnore]
+    public virtual Claim? Claim { get; set; }
+
+
     #region Override
 
     /// <summary>

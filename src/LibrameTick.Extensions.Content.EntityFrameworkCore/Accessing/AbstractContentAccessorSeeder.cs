@@ -50,12 +50,14 @@ public abstract class AbstractContentAccessorSeeder : AbstractAccessorSeeder
     /// <summary>
     /// 获取类别集合。
     /// </summary>
-    /// <returns>返回 <see cref="IEnumerable{Category}"/>。</returns>
-    public IEnumerable<Category> GetCategories()
+    /// <returns>返回 <see cref="List{Category}"/>。</returns>
+    public List<Category> GetCategories()
     {
         return Seed(nameof(GetCategories), key =>
         {
-            return ContentOptions.InitialCategories.Select(pair =>
+            var categories = new List<Category>();
+
+            foreach (var pair in ContentOptions.InitialCategories)
             {
                 var category = new Category();
 
@@ -63,15 +65,15 @@ public abstract class AbstractContentAccessorSeeder : AbstractAccessorSeeder
                 category.Description = pair.Value.Description;
 
                 // 查找与父级名称匹配的对应增量标识
-                var currentParentName = pair.Value.ParentName;
-
                 category.ParentId = GetProgressiveIncremId(ContentOptions.InitialCategories,
-                    ele => ele.Value.ParentName == currentParentName);
+                    ele => ele.Value.ParentName == pair.Value.ParentName);
 
                 category.PopulateCreation(GetInitialUserId(), Clock.GetUtcNow());
 
-                return category;
-            });
+                categories.Add(category);
+            }
+
+            return categories;
         });
     }
 
@@ -79,8 +81,8 @@ public abstract class AbstractContentAccessorSeeder : AbstractAccessorSeeder
     /// 异步获取类别集合。
     /// </summary>
     /// <param name="cancellationToken">给定的 <see cref="CancellationToken"/>。</param>
-    /// <returns>返回一个包含 <see cref="IEnumerable{Category}"/> 的异步操作。</returns>
-    public Task<IEnumerable<Category>> GetCategoriesAsync(CancellationToken cancellationToken = default)
+    /// <returns>返回一个包含 <see cref="List{Category}"/> 的异步操作。</returns>
+    public Task<List<Category>> GetCategoriesAsync(CancellationToken cancellationToken = default)
         => cancellationToken.RunTask(GetCategories);
 
 
@@ -118,8 +120,8 @@ public abstract class AbstractContentAccessorSeeder : AbstractAccessorSeeder
     /// <summary>
     /// 获取窗格集合。
     /// </summary>
-    /// <returns>返回 <see cref="IEnumerable{Pane}"/>。</returns>
-    public IEnumerable<Pane> GetPanes()
+    /// <returns>返回 <see cref="List{Pane}"/>。</returns>
+    public List<Pane> GetPanes()
     {
         return Seed(nameof(GetPanes), key =>
         {
@@ -129,15 +131,20 @@ public abstract class AbstractContentAccessorSeeder : AbstractAccessorSeeder
             {
                 var pane = new Pane();
 
-                pane.CategoryId = GetProgressiveIncremId(categories, p => p.Name == pair.Value.Category);
                 pane.Name = pair.Key;
                 pane.Description = pair.Value.Description;
                 pane.Template = pair.Value.Template;
 
+                //pane.CategoryId = GetProgressiveIncremId(categories, p => p.Name == pair.Value.Category);
+                pane.Category = categories.FirstOrDefault(p => p.Name == pair.Value.Category);
+
                 pane.PopulateCreation(GetInitialUserId(), Clock.GetUtcNow());
 
+                if (pane.Category is not null)
+                    pane.Category.AddPane(pane);
+
                 return pane;
-            });
+            }).ToList();
         });
     }
 
@@ -146,19 +153,21 @@ public abstract class AbstractContentAccessorSeeder : AbstractAccessorSeeder
     /// </summary>
     /// <param name="cancellationToken">给定的 <see cref="CancellationToken"/>。</param>
     /// <returns>返回一个包含 <see cref="IEnumerable{Pane}"/> 的异步操作。</returns>
-    public Task<IEnumerable<Pane>> GetPanesAsync(CancellationToken cancellationToken = default)
+    public Task<List<Pane>> GetPanesAsync(CancellationToken cancellationToken = default)
         => cancellationToken.RunTask(GetPanes);
 
 
     /// <summary>
     /// 获取来源集合。
     /// </summary>
-    /// <returns>返回 <see cref="IEnumerable{Source}"/>。</returns>
-    public IEnumerable<Source> GetSources()
+    /// <returns>返回 <see cref="List{Source}"/>。</returns>
+    public List<Source> GetSources()
     {
         return Seed(nameof(GetSources), key =>
         {
-            return ContentOptions.InitialSources.Select(pair =>
+            var sources = new List<Source>();
+
+            foreach (var pair in ContentOptions.InitialSources)
             {
                 var source = new Source();
 
@@ -166,15 +175,15 @@ public abstract class AbstractContentAccessorSeeder : AbstractAccessorSeeder
                 source.Description = pair.Value.Description;
 
                 // 查找与父级名称匹配的对应增量标识
-                var currentParentName = pair.Value.ParentName;
-
                 source.ParentId = GetProgressiveIncremId(ContentOptions.InitialSources,
-                    ele => ele.Value.ParentName == currentParentName);
+                    ele => ele.Value.ParentName == pair.Value.ParentName);
 
                 source.PopulateCreation(GetInitialUserId(), Clock.GetUtcNow());
 
-                return source;
-            });
+                sources.Add(source);
+            }
+
+            return sources;
         });
     }
 
@@ -182,16 +191,16 @@ public abstract class AbstractContentAccessorSeeder : AbstractAccessorSeeder
     /// 异步获取来源集合。
     /// </summary>
     /// <param name="cancellationToken">给定的 <see cref="CancellationToken"/>。</param>
-    /// <returns>返回一个包含 <see cref="IEnumerable{Source}"/> 的异步操作。</returns>
-    public Task<IEnumerable<Source>> GetSourcesAsync(CancellationToken cancellationToken = default)
+    /// <returns>返回一个包含 <see cref="List{Source}"/> 的异步操作。</returns>
+    public Task<List<Source>> GetSourcesAsync(CancellationToken cancellationToken = default)
         => cancellationToken.RunTask(GetSources);
 
 
     /// <summary>
     /// 获取标签集合。
     /// </summary>
-    /// <returns>返回 <see cref="IEnumerable{Tag}"/>。</returns>
-    public IEnumerable<Tag> GetTags()
+    /// <returns>返回 <see cref="List{Tag}"/>。</returns>
+    public List<Tag> GetTags()
     {
         return Seed(nameof(GetTags), key =>
         {
@@ -204,7 +213,7 @@ public abstract class AbstractContentAccessorSeeder : AbstractAccessorSeeder
                 tag.PopulateCreation(GetInitialUserId(), Clock.GetUtcNow());
 
                 return tag;
-            });
+            }).ToList();
         });
     }
 
@@ -212,8 +221,8 @@ public abstract class AbstractContentAccessorSeeder : AbstractAccessorSeeder
     /// 异步获取标签集合。
     /// </summary>
     /// <param name="cancellationToken">给定的 <see cref="CancellationToken"/>。</param>
-    /// <returns>返回一个包含 <see cref="IEnumerable{Tag}"/> 的异步操作。</returns>
-    public Task<IEnumerable<Tag>> GetTagsAsync(CancellationToken cancellationToken = default)
+    /// <returns>返回一个包含 <see cref="List{Tag}"/> 的异步操作。</returns>
+    public Task<List<Tag>> GetTagsAsync(CancellationToken cancellationToken = default)
         => cancellationToken.RunTask(GetTags);
 
 
@@ -226,28 +235,72 @@ public abstract class AbstractContentAccessorSeeder : AbstractAccessorSeeder
         return Seed(nameof(GetUnits), key =>
         {
             var categories = GetCategories();
-            var sources = GetSources();
+            var tags = GetTags();
+            var panes = GetPanes();
 
             var units = new List<Unit>();
 
-            foreach (var pane in GetPanes())
+            foreach (var pane in panes)
             {
-                for (var i = 1; i < 21; i++)
+                for (var i = 1; i < 11; i++)
                 {
                     var unit = new Unit();
 
                     unit.Id = IdGeneratorFactory.GetNewId<long>();
+                    unit.Title = $"测试{pane.Name}单元标题{i}";
+                    unit.Subtitle = unit.Title;
+                    unit.Cover = ContentOptions.InitialUnitCover;
+                    unit.PublishedAs = $"/preview/{unit.Id}";
+
                     unit.CategoryId = GetProgressiveIncremId(categories, p => p.Name == pane.Name);
                     unit.SourceId = 1;
-                    unit.Title = $"测试{pane.Name}单元标题{i}";
-                    unit.Cover = "images/default.jpg";
+                    // 使用实体关联易造成冲突，改为使用标识
+                    //unit.Category = categories.FirstOrDefault(p => p.Name == pane.Name);
+                    //unit.Source = sources.FirstOrDefault();
 
                     for (var j = 0; j < 10; j++)
                     {
                         unit.Body += $"测试{pane.Name}单元内容{i}。";
                     }
 
-                    unit.PopulateCreation(GetInitialUserId(), Clock.GetUtcNow());
+                    unit.PopulatePublication(GetInitialUserId(), Clock.GetUtcNow());
+
+                    if (unit.Category is not null)
+                        unit.Category.AddUnit(unit);
+
+                    if (unit.Source is not null)
+                        unit.Source.AddUnit(unit);
+
+                    // Add Tag
+                    var tagIndex = RandomExtensions.Run(r => r.Next(tags.Count - 1));
+                    var tag = tags[tagIndex];
+
+                    var unitTag = new UnitTag
+                    {
+                        Id = IdGeneratorFactory.GetNewId<long>(),
+                        Unit = unit,
+                        Tag = tag
+                    };
+
+                    unitTag.PopulateCreation(GetInitialUserId(), Clock.GetUtcNow());
+
+                    tag.AddUnitTag(unitTag);
+                    unit.AddTag(unitTag);
+
+                    // Add PaneUnit
+                    var paneUnit = new PaneUnit
+                    {
+                        Pane = pane,
+                        Unit = unit
+                    };
+
+                    paneUnit.PopulateCreation(GetInitialUserId(), Clock.GetUtcNow());
+
+                    pane.AddPaneUnit(paneUnit);
+                    unit.AddPaneUnit(paneUnit);
+
+                    // Initial VisitCount
+                    unit.InitialVisitCount();
 
                     units.Add(unit);
                 }

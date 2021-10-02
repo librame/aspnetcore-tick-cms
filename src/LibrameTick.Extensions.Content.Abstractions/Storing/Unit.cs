@@ -68,6 +68,95 @@ public class Unit : AbstractPublicationIdentifier<long, string>, IEquatable<Unit
         = string.Empty;
 
 
+    /// <summary>
+    /// 分类。
+    /// </summary>
+    [JsonIgnore]
+    public virtual Category? Category {  get; set; }
+
+    /// <summary>
+    /// 来源。
+    /// </summary>
+    [JsonIgnore]
+    public virtual Source? Source { get; set; }
+
+    /// <summary>
+    /// 访问计数。
+    /// </summary>
+    public virtual UnitVisitCount? VisitCount { get; set; }
+
+    /// <summary>
+    /// 声明集合。
+    /// </summary>
+    public virtual List<UnitClaim>? Claims { get; set; }
+
+    /// <summary>
+    /// 标签集合。
+    /// </summary>
+    public virtual List<UnitTag>? Tags { get; set; }
+
+    /// <summary>
+    /// 窗格单元集合。
+    /// </summary>
+    public virtual List<PaneUnit>? PaneUnits { get; set; }
+
+
+    /// <summary>
+    /// 添加导航单元声明。
+    /// </summary>
+    /// <param name="unitClaim">给定的 <see cref="UnitClaim"/>。</param>
+    /// <returns>返回 <see cref="Unit"/>。</returns>
+    public virtual Unit AddClaim(UnitClaim unitClaim)
+    {
+        if (Claims is null)
+            Claims = new();
+
+        Claims.Add(unitClaim);
+        return this;
+    }
+
+    /// <summary>
+    /// 添加导航单元标签。
+    /// </summary>
+    /// <param name="unitTag">给定的 <see cref="UnitTag"/>。</param>
+    /// <returns>返回 <see cref="Unit"/>。</returns>
+    public virtual Unit AddTag(UnitTag unitTag)
+    {
+        if (Tags is null)
+            Tags = new();
+
+        Tags.Add(unitTag);
+        return this;
+    }
+
+    /// <summary>
+    /// 添加导航窗格单元。
+    /// </summary>
+    /// <param name="paneUnit">给定的 <see cref="PaneUnit"/>。</param>
+    /// <returns>返回 <see cref="Unit"/>。</returns>
+    public virtual Unit AddPaneUnit(PaneUnit paneUnit)
+    {
+        if (PaneUnits is null)
+            PaneUnits = new();
+
+        PaneUnits.Add(paneUnit);
+        return this;
+    }
+
+    /// <summary>
+    /// 初始化访问计数。
+    /// </summary>
+    /// <returns>返回 <see cref="Unit"/>。</returns>
+    public virtual Unit InitialVisitCount()
+    {
+        VisitCount = new UnitVisitCount
+        {
+            Unit = this
+        };
+        return this;
+    }
+
+
     #region Override
 
     /// <summary>

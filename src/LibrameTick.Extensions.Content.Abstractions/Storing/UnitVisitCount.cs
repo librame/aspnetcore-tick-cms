@@ -66,6 +66,13 @@ public class UnitVisitCount : IEquatable<UnitVisitCount>
     public virtual long VisitorCount { get; set; }
 
 
+    /// <summary>
+    /// 单元。
+    /// </summary>
+    [JsonIgnore]
+    public virtual Unit? Unit { get; set; }
+
+
     #region Override
 
     /// <summary>
